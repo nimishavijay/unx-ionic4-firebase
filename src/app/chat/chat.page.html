@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>chat</ion-title>
+    <ion-buttons slot="end">
+      <ion-button icon-only (click)="exitChat()">
+        <ion-icon name="exit"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list class="chat-list">
+
+    <ion-item *ngFor="let chat of chats" no-lines>
+      <div class="chat-status" text-center *ngIf="chat.type==='join'||chat.type==='exit';else message">
+        <span class="chat-date">{{chat.sendDate | date: 'yy/MM/dd (EEE) HH:mm'}}</span>
+        <span class="chat-content-center">{{chat.message}}</span>
+      </div>
+
+      <ng-template #message>
+
+        <ion-item text-wrap>
+          <!--chat.userとnicknameが等しくない場合に表示-->
+          
+
+          <ion-label text-wrap class="media-body">
+			<small>{{chat.user}} </small>
+            <h4>{{chat.message}}
+			<ion-icon name = 'trash' slot = 'end' (click) = sendDeleteMessage(chat)></ion-icon>
+            </h4>
+			<small>{{chat.sendDate | date: 'yy/MM/dd (EEE) HH:mm'}}</small>
+          </ion-label>
+          
+          <!--chat.userとnicknameが等しい場合に表示-->
+		  <!--ion-avatar slot="end" *ngIf="chat.user === nickname">
+              <img src="assets/imgs/usagi.png"/>
+            </ion-avatar> -->
+          <tr>   
+        </ion-item>
+
+      </ng-template>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-input type="text" placeholder="Type a message" [(ngModel)]="chatMessage" name="message"></ion-input>
+    <ion-buttons slot="end">
+      <ion-button slot="end" color="primary" (click)="sendChatMessage()">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

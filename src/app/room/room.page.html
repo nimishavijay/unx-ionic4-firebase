@@ -1,0 +1,66 @@
+<ion-menu>
+  <ion-header>
+    <ion-toolbar color='primary'>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-menu-toggle>
+        <ion-item>
+          <ion-icon name='power' slot="end" size='small'></ion-icon>
+          <ion-label (click)="signOut()">
+						Sign Out 
+          </ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+	 	 <ion-menu-toggle>
+        <ion-item>
+					 <ion-icon name='add-circle' slot="end" size='small'></ion-icon>
+          <ion-label (click)="addRoom()">
+            Create room
+          </ion-label>
+        </ion-item>
+      </ion-menu-toggle>  
+			<ion-menu-toggle>
+        <ion-item>
+					<ion-icon name='settings' slot="end" size='small'></ion-icon>
+          <ion-label (click)="settings()">
+            Settings
+          </ion-label>
+        </ion-item>
+      </ion-menu-toggle>  
+    </ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Chatrooms</ion-title>
+    <ion-buttons slot="end">
+      <ion-button icon-only (click)="addRoom()">
+        <ion-icon name="add-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content main padding>
+  <ion-list>
+    <ion-item *ngFor="let room of rooms" (click)="joinRoom(room.key)" lines='full'>
+      {{room.roomname}}
+      <ion-icon name="chatboxes" slot="end"></ion-icon>
+    </ion-item>
+  </ion-list>
+	<ion-fab vertical='bottom' horizontal='end' (click)='addRoom()'>
+		<ion-fab-button>
+			<ion-icon name='add'></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>
