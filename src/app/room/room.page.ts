@@ -26,14 +26,16 @@ async ngOnInit() {
             const room = childSnapshot.val();
             room.key = childSnapshot.key;
             this.rooms.push(room);
-          });
-        }
+          })
+				} else {
+					console.log("error");
+				}
       });
-      } else {
-        this.router.navigate(['/signin']);
-      }
-    });
-  }
+    } else {
+      this.router.navigate(['/signin']);
+    }
+  });
+}
 
   joinRoom(key) {
     this.router.navigate(['/chat/' + key]);
@@ -46,6 +48,16 @@ async ngOnInit() {
 	settings() {
 		console.log("navigate to settings");
 	}
+
+	deleteRoom(key) {
+		var roomno = firebase.database().ref('chatrooms/' + key).remove()
+		.then(() => {
+			console.log("Room removed");
+		})
+		.catch((error) => {
+			console.log("Remove failed" + error.message);
+		})
+	}	
 
   async signOut() {
     try {

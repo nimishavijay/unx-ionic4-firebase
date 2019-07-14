@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Content } from '@ionic/angular';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
+import { promise } from 'protractor';
 
 @Component({
   selector: 'app-chat',
@@ -14,6 +15,7 @@ export class ChatPage implements OnInit {
   roomkey: string;
   nickname: string;
   chatMessage: string;
+	roomname: string;
 
   chats = [];
   offStatus = false;
@@ -27,14 +29,22 @@ export class ChatPage implements OnInit {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.roomkey = this.route.snapshot.paramMap.get('key') as string;
-        // 基準文字列から前の文字列を切り出して表示
         var index = user.email.indexOf("@");
         this.nickname = user.email.substring(0, index);
+				firebase.database().ref('chatrooms/' + this.roomkey + '/roomname').once('value')
+					.then((roomdata) => {
+						this.roomname = roomdata.val();
+					})
+					.catch((error) => {
+						console.log(error.message);
+						this.roomname = null;
+					});
 
         this.sendJoinMessage();
         this.displayChatMessage();
         this.scroll();
-      } else {
+      }
+			else {
         this.router.navigate(['/signin']);
       }
     });
@@ -75,15 +85,28 @@ export class ChatPage implements OnInit {
   }
 
   sendJoinMessage() {
-    this.sendMessage('join', this.nickname + ' has joined this room.');
+		firebase.database().ref('chatrooms/' + this.roomkey + '/roomname').once('value')
+			.then((roomdata) => {
+				console.log(this.nickname + ' has joined ' + roomdata.val());
+			})
+			.catch((error) => {
+				console.log(error.message);
+				});
+  //  this.sendMessage('join', this.nickname + ' has joined this room.');
   }
 
   sendExitMessage() {
-    this.sendMessage('exit', this.nickname + ' has exited this room.');
+    firebase.database().ref('chatrooms/' + this.roomkey + '/roomname').once('value')
+			.then((roomdata) => {
+				console.log(this.nickname + ' has exited ' + roomdata.val());
+			})
+			.catch((error) => {
+				console.log(error.message);
+			});
+	//	this.sendMessage('exit', this.nickname + ' has exited this room.');
   }
 
   sendDeleteMessage(chat) {
-	// firebase.database().ref('chatrooms/' + this.roomkey + '/chats')
 	firebase.database().ref('chatrooms/' + this.roomkey + '/chats/' + chat.key).remove()
 		.then(function() {
 		    console.log("Remove succeeded.")
@@ -99,7 +122,8 @@ export class ChatPage implements OnInit {
       type: type,
       user: this.nickname,
       message: message,
-      sendDate: Date()
+      sendDate: Date(),
+			room: this.roomname
     });
     this.chatMessage = ""
     this.scroll();
