@@ -15,7 +15,6 @@ export class ChatPage implements OnInit {
   roomkey: string;
   nickname: string;
   chatMessage: string;
-	roomname: string;
 
   chats = [];
   offStatus = false;
@@ -122,8 +121,7 @@ export class ChatPage implements OnInit {
       type: type,
       user: this.nickname,
       message: message,
-      sendDate: Date(),
-			room: this.roomname
+      sendDate: Date()
     });
     this.chatMessage = ""
     this.scroll();

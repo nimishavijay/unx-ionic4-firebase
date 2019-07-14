@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { NAMED_ENTITIES } from '@angular/compiler';
+import { RoomPage } from '../room/room.page' ;
 
 @Component({
   selector: 'app-add-room',
@@ -11,22 +12,31 @@ import { NAMED_ENTITIES } from '@angular/compiler';
 
 export class AddRoomPage implements OnInit {
 
-  data: { roomname: string } = { roomname: '' };
+  users = [];
 
   constructor(private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+		firebase.auth().onAuthStateChanged((user) => {
+			if (user) {
+				var activeUserKey = firebase.auth().currentUser.uid;
+				firebase.database().ref('users/').on('value', resp => {
+					this.users = [];
+					resp.forEach(child => {						
+						const user = child.val();
+						console.log(user);
+						user.key = child.key;
+						this.users.push(user);						
+					})
+				})
+			} else {
+				this.router.navigate(['/signin']);
+			}
+		});
   }
 
-  addRoom() {
-		if (this.data.roomname !== '') {
-	    const newData = firebase.database().ref('chatrooms/').push({
-	      roomname: this.data.roomname
-	  });
-		console.log("added"+this.data.roomname);
-	  this.router.navigate(['/room']);
-  	}
+	goBack() {
+		this.router.navigate(['/room']);
 	}
+
 }
-// 	TODO 
-// DO NOT ALLOW ROOMS WITH THE SAME NAME

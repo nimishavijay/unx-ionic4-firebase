@@ -11,7 +11,13 @@ import * as firebase from 'firebase';
 })
 export class SigninPage implements OnInit {
 
-  data: { email: string, password: string } = { email: '', password: '' };
+  data: { 
+		email: string, 
+		password: string 
+	} = { 
+		email: '', 
+		password: '' 
+	};
 
   constructor(
     private router: Router,
@@ -20,7 +26,6 @@ export class SigninPage implements OnInit {
 
   ngOnInit() {
   }
-
   async signIn() {
     try {
       await firebase

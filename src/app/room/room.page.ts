@@ -10,38 +10,40 @@ import { Router } from '@angular/router';
 })
 export class RoomPage implements OnInit {
 
-  rooms = [];
+  chats = [];
 
   constructor(private router: Router) { }
 
-async ngOnInit() {
+	async ngOnInit() {
+	  firebase.auth().onAuthStateChanged((user) => {
+	    if (user) {
+				var activeUser = firebase.auth().currentUser;
+			//	console.log(activeUser);
+	    /*  firebase.database().ref('user/').on('value', resp => {
+	        if (resp) {
+	          this.chats = [];
+	          resp.forEach(childSnapshot => {
+	            const chat = childSnapshot.val();
+	            chat.key = childSnapshot.key;
+	            this.chats.push(chat);
+	          })
+					} else {
+						console.log("error");
+					}
+	      }); */
+	    } else {
+	      this.router.navigate(['/signin']);
+	    }
+	  });
+	}
 
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-			console.log(firebase.auth().currentUser.email);
-      firebase.database().ref('chatrooms/').on('value', resp => {
-        if (resp) {
-          this.rooms = [];
-          resp.forEach(childSnapshot => {
-            const room = childSnapshot.val();
-            room.key = childSnapshot.key;
-            this.rooms.push(room);
-          })
-				} else {
-					console.log("error");
-				}
-      });
-    } else {
-      this.router.navigate(['/signin']);
-    }
-  });
-}
+  
+  goToChat(key) {
+		console.log('chat with ' + key);
+//		this.router.navigate(['/chat/' + key]);
+	}
 
-  joinRoom(key) {
-    this.router.navigate(['/chat/' + key]);
-  }
-
-  addRoom() {
+  newChat() {
     this.router.navigate(['/add-room']);
   }
 
@@ -49,21 +51,12 @@ async ngOnInit() {
 		console.log("navigate to settings");
 	}
 
-	deleteRoom(key) {
-		var roomno = firebase.database().ref('chatrooms/' + key).remove()
-		.then(() => {
-			console.log("Room removed");
-		})
-		.catch((error) => {
-			console.log("Remove failed" + error.message);
-		})
-	}	
-
   async signOut() {
     try {
       await firebase.auth().signOut();
       this.router.navigate(['/signin']);
-
-    } catch (error) {}
+    } catch (error) {
+			console.log('Sign out error: ' + error.message);
+		}
   }
 }
