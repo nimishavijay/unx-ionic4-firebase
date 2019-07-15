@@ -25,9 +25,9 @@ export class ChatPage implements OnInit {
     public router: Router,
     public route: ActivatedRoute
   ) {
-    firebase.auth().onAuthStateChanged((user) => {
+ /*   firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.roomkey = this.route.snapshot.paramMap.get('key') as string;
+         this.roomkey = this.route.snapshot.paramMap.get('key') as string;
         var index = user.email.indexOf("@");
         this.nickname = user.email.substring(0, index);
 				firebase.database().ref('chatrooms/' + this.roomkey + '/roomname').once('value')
@@ -46,13 +46,13 @@ export class ChatPage implements OnInit {
 			else {
         this.router.navigate(['/signin']);
       }
-    });
+    }); */
   }
 
   ngOnInit() {
   }
 
-  displayChatMessage() {
+/*   displayChatMessage() {
     firebase.database()
       .ref('chatrooms/' + this.roomkey + '/chats')
       .on('value', resp => {
@@ -126,5 +126,5 @@ export class ChatPage implements OnInit {
     this.chatMessage = ""
     this.scroll();
   }
-
+ */
 }

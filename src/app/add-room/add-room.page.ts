@@ -26,6 +26,7 @@ export class AddRoomPage implements OnInit {
 						const user = child.val();
 						console.log(user);
 						user.key = child.key;
+						user.name = child.val();
 						this.users.push(user);						
 					})
 				})
