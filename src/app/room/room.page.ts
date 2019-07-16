@@ -17,7 +17,20 @@ export class RoomPage implements OnInit {
 	async ngOnInit() {
 	  firebase.auth().onAuthStateChanged((user) => {
 	    if (user) {
-				var activeUser = firebase.auth().currentUser;
+				// var activeUser = firebase.auth().currentUser;
+				// var userChatIds = [];
+				var userKey = firebase.database().ref('users/').orderByChild('info/uid').equalTo(firebase.auth().currentUser.uid);
+				firebase.database().ref('users/' + userKey + '/chats').on('value', chatIds => {
+					if (chatIds) {
+						this.chats = [];
+						chatIds.forEach(chat => {
+							const temp = chat.val();
+							temp.key = chat.key;
+							this.chats.push(temp);
+						}) 
+					}
+				});
+
 			//	console.log(activeUser);
 	    /*  firebase.database().ref('user/').on('value', resp => {
 	        if (resp) {

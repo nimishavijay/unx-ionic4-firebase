@@ -15,12 +15,12 @@ export class SignupPage implements OnInit {
 		email: string, 
 		password: string, 
 		confirm: string, 
-		username: string 
+		username: string, 
 	} = { 
 		email: '',
 		password: '', 
 		confirm: '', 
-		username: '' 
+		username: ''
 	};
 
   constructor(
@@ -37,14 +37,32 @@ export class SignupPage implements OnInit {
 				throw new Error('Passwords do not match');
 			}
       await firebase.auth().createUserWithEmailAndPassword(this.data.email, this.data.password);
+			var activeUser = firebase.auth().currentUser;
+			await activeUser.updateProfile({
+				displayName: this.data.username,
+				photoURL: null
+			}).then(() => console.log("updated profile: \n" + activeUser) )
+				.catch((error) => console.log(error.message))
+		/* 
+			var newUser = firebase.database().ref('users/').push();
+			console.log(activeUser);
+			newUser.set({
+				'info': activeUser
+			})
+				.then(() => console.log('set info: ' + activeUser))
+				.catch((error) => console.log(error.message));
+			 */
+			
 			const newData = firebase.database().ref("users/").push();
 			newData.set({
-				info: {
-					email: this.data.email,
-					username: this.data.username,
-					uid: firebase.auth().currentUser.uid,
-				}
+				// info: {
+					email: activeUser.email,
+					username: activeUser.displayName,
+					uid: activeUser.uid,
+				// },
+				chats: { } 
 			});
+			
 			console.log(this.data.username + ' signed up');
     	this.router.navigate(['/room']);
     } catch (error) {
@@ -56,5 +74,4 @@ export class SignupPage implements OnInit {
       alert.present();
     }
   }
-
 }

@@ -102,18 +102,18 @@
     </ion-buttons>
     <ion-title>Chats</ion-title>
     <ion-buttons slot="end">
-        <ion-icon name="add-circle"></ion-icon>
+        <ion-icon name="add-circle" (click)='newChat()'></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content main padding>
-  <ion-list>
+<!--   <ion-list>
     <ion-item *ngFor="let chat of chats" (click)="goToChat(chat.key)" lines='full'>
       {{chat.chatname}}
     </ion-item>
-  </ion-list>
+  </ion-list> -->
 	<ion-fab vertical='bottom' horizontal='end' (click)='newChat()'>
 		<ion-fab-button>
 			<ion-icon name='add'></ion-icon>
