@@ -32,10 +32,11 @@ export class AddRoomPage implements OnInit {
 					resp.forEach(child => {
 						if (child.key !== this.currentUser.key) {				
 							const user = child.val(); 
-/* 
+/* ---
 	HUGE PROBLEM HERE. If the entire contents of child.val() are copied to user,
 	then the active user might have access to the other user's chats.
- */	 
+	Change security rules.
+*/ 
 							user.username = child.val().username;
 							user.key = child.key;
 							this.users.push(user);			
@@ -48,32 +49,44 @@ export class AddRoomPage implements OnInit {
 		});
   }
 
-	chatWithUser(key) {
-		if ( key in firebase.database().ref('users/' + this.currentUser.key + 'chats/')) {
-			// this.router.navigate(['/chats' + key])
-			console.log("navigate to /chats/" + key);
-// DOESN'T WORK
-		}
-		else {
-			var temp;
-			firebase.database().ref('users/').orderByKey().equalTo(key).on('value', snapshot => {
-					snapshot.forEach((data) => {
-						temp = data.val();
-						console.log(data.val());
-					})
-				});	
-			const newDataChat = firebase.database().ref('chats/').push();
-			newDataChat.set({
-				mentor: key,
-				mentee: this.currentUser.key,
-				created: Date()
-			})
-				.then(() => console.log("Chat pushed to chatdb"))
-				.catch((error) => console.log(error.message));
+	async chatWithUser(userKey) {	
+		firebase.database().ref('users/' + this.currentUser.key + '/chats/').orderByChild('user2Key').equalTo(userKey).on('value', snapshot => {
+			// console.log(snapshot.val());
+			if (snapshot.val() === null) this.newChat(userKey);
+			else snapshot.forEach(() => this.goToChat(userKey));
+		})
+	}
 
-			const newDataUser = firebase.database().ref('users/' + this. currentUser.key + '/chats/').set({ [newDataChat.key]: temp.username })
-				.then(() => console.log("Chat pushed to userdb"));
-		}
+	goToChat(userKey) {
+		console.log('navigate to /chats/' + userKey);
+	}
+
+	newChat(userKey) {
+		var user2Data;
+		firebase.database().ref('users/').orderByKey().equalTo(userKey).on('value', snapshot => {
+			snapshot.forEach((data) => {
+				user2Data = data.val();
+				// console.log(data.val());
+			})
+		});
+		
+		const newDataChat = firebase.database().ref('chats/').push();
+		newDataChat.set({
+			mentor: userKey,
+			mentee: this.currentUser.key,
+			created: Date()
+		}).then(() => console.log("Chat pushed to chatdb"))
+			.catch((error) => console.log(error.message));
+		
+		firebase.database().ref('users/' + this. currentUser.key + '/chats/' + newDataChat.key).update({ 
+			user2Key: userKey,
+			user2Name: user2Data.username
+		}).then(() => console.log("Chat pushed to user1db"));
+		
+		firebase.database().ref('users/' + userKey + '/chats/' + newDataChat.key).update({ 
+			user2Key: this.currentUser.key,
+			user2Name: this.currentUser.username
+		}).then(() => console.log("Chat pushed to user2db"));	
 	}
 
 	goBack() {
