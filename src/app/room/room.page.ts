@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 //import { NavController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
+import { Key } from 'protractor';
 
 @Component({
   selector: 'app-room',
@@ -11,26 +12,36 @@ import { Router } from '@angular/router';
 export class RoomPage implements OnInit {
 
   chats = [];
+	currentUser = {
+		key: "",
+		name: ""
+	};
 
   constructor(private router: Router) { }
 
 	async ngOnInit() {
-	  firebase.auth().onAuthStateChanged((user) => {
+	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-				// var activeUser = firebase.auth().currentUser;
-				// var userChatIds = [];
-				var userKey = firebase.database().ref('users/').orderByChild('info/uid').equalTo(firebase.auth().currentUser.uid);
-				firebase.database().ref('users/' + userKey + '/chats').on('value', chatIds => {
-					if (chatIds) {
+			firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
+				snapshot.forEach((data) => {
+					this.currentUser.name = data.val().username;
+					this.currentUser.key =  data.key;
+					console.log(this.currentUser.key);
+				})
+			}).then(() => {
+				firebase.database().ref('users/' + this.currentUser.key + '/chats/').on('value', snapshot => {
+					console.log(snapshot);
+					// if (snapshot) {
 						this.chats = [];
-						chatIds.forEach(chat => {
+						snapshot.forEach(chat => {
+							console.log(chat.val());
 							const temp = chat.val();
 							temp.key = chat.key;
 							this.chats.push(temp);
 						}) 
-					}
+					// }
 				});
-
+			});
 			//	console.log(activeUser);
 	    /*  firebase.database().ref('user/').on('value', resp => {
 	        if (resp) {
@@ -50,7 +61,10 @@ export class RoomPage implements OnInit {
 	  });
 	}
 
-  
+  async getThisUser() {
+		
+	}
+
   goToChat(key) {
 		console.log('chat with ' + key);
 //		this.router.navigate(['/chat/' + key]);
