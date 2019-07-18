@@ -1,6 +1,8 @@
 {
   "name": "ionic4-firebase-chat2",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular",
   "id": "bd8f460e"
 }
