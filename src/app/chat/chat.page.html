@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Chat</ion-title>
+    <ion-title>{{user2.name}}</ion-title>
     <ion-buttons slot="start">
-      <ion-button icon-only (click)="exitChat()">
+      <ion-button icon-only (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -12,40 +12,33 @@
 <ion-content padding-right>
   <ion-list class="chat-list">
 
-    <ion-item *ngFor="let chat of chats"  no-lines>
-      <div class="chat-status" text-center *ngIf="chat.type==='join'||chat.type==='exit';else message">
-        <span class="chat-date">{{chat.sendDate | date: 'dd/MM HH:mm'}}</span>
-        <span class="chat-content-center">{{chat.message}}</span>
-      </div>
+    <ion-item *ngFor="let msg of messages"  no-lines>
 
-      <ng-template #message>
       <!-- <ion-item *ngIf="chat.type !== 'join' || chat.type !== 'exit'">   -->
-				<ion-item text-wrap slot="end" *ngIf="chat.user === nickname">
+				<ion-item text-wrap slot="end" *ngIf="msg.senderId === currentUser.key; else receivedMsgs">
       	  <ion-label text-wrap class="media-body">
-						<small>{{chat.user}} </small>
+						<!-- <small>{{chat.user}} </small> -->
       	   	<h5>
-							{{chat.message}}
-							<ion-icon name = 'trash' (click) = sendDeleteMessage(chat)></ion-icon>
+							{{msg.content}}
             </h5>
-						<small>{{chat.sendDate | date: 'dd/MM HH:mm'}}</small>
+						<small>{{msg.date | date: 'dd/MM HH:mm'}}</small>
           </ion-label>
           <tr>   
         </ion-item>
-
-				<ion-item text-wrap slot="start" *ngIf="chat.user !== nickname">
-      	  <ion-label text-wrap class="media-body">
-						<small>{{chat.user}} </small>
-      	   	<h5>
-							{{chat.message}}
-							<ion-icon name = 'trash' slot = 'end' (click) = sendDeleteMessage(chat)></ion-icon>
-            </h5>
-						<small>{{chat.sendDate | date: 'dd/MM HH:mm'}}</small>
-          </ion-label>
-         
-          <tr>   
-        </ion-item>
+      	<ng-template #receivedMsgs>
+					<ion-item text-wrap slot="start">
+      		  <ion-label text-wrap class="media-body">
+							<!-- <small>{{chat.user}} </small> -->
+      		   	<h5>
+								{{msg.content}}
+								<!-- <ion-icon name = 'trash' slot = 'end' (click) = sendDeleteMessage(chat)></ion-icon> -->
+      	      </h5>
+							<small>{{msg.date | date: 'dd/MM HH:mm'}}</small>
+      	    </ion-label>
+      	    <tr>   
+      	  </ion-item>
+      	</ng-template>
       <!-- </ion-item> -->
-      </ng-template>
     </ion-item>
   </ion-list>
 </ion-content>
@@ -54,7 +47,7 @@
   <ion-toolbar>
     <ion-input type="text" placeholder="Type a message" [(ngModel)]="chatMessage" name="message"></ion-input>
     <ion-buttons slot="end">
-      <ion-button slot="end" color="primary" (click)="sendChatMessage()">
+      <ion-button slot="end" color="primary" (click)="sendMessage(chatMessage)">
         <ion-icon name="send"></ion-icon>
       </ion-button>
     </ion-buttons>

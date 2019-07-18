@@ -4,6 +4,7 @@ import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { Key } from 'protractor';
 
+
 @Component({
   selector: 'app-room',
   templateUrl: './room.page.html',
@@ -13,13 +14,14 @@ export class RoomPage implements OnInit {
 
   chats = [];
 	currentUser = {
-		key: "",
-		name: ""
+		key: '',
+		name: ''
 	};
 
   constructor(private router: Router) { }
 
 	async ngOnInit() {
+		console.log('---EXISTING CHATS---');
 	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
 			firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
@@ -34,7 +36,7 @@ export class RoomPage implements OnInit {
 					// if (snapshot) {
 						this.chats = [];
 						snapshot.forEach(chat => {
-							console.log(chat.val());
+							// console.log(chat.val());
 							const temp = chat.val();
 							temp.key = chat.key;
 							this.chats.push(temp);
@@ -61,16 +63,11 @@ export class RoomPage implements OnInit {
 	  });
 	}
 
-  async getThisUser() {
-		
+  goToChat(chatKey) {
+		this.router.navigate(['/chat/' + chatKey]);
 	}
 
-  goToChat(key) {
-		console.log('chat with ' + key);
-//		this.router.navigate(['/chat/' + key]);
-	}
-
-  newChat() {
+  newChatPage() {
     this.router.navigate(['/add-room']);
   }
 

@@ -12,77 +12,82 @@ import { promise } from 'protractor';
 })
 export class ChatPage implements OnInit {
 
-  roomkey: string;
-  nickname: string;
-  chatMessage: string;
+	chatId: string;
+  
+	currentUser = {
+		key: '',
+		name: ''
+	};
 
-  chats = [];
+	user2 = {
+		key:'',
+		name: ''
+	};
+	
+  chatMessage: string;
+  messages = [];
   offStatus = false;
 
   @ViewChild(Content) content: Content;
 
-  constructor(
+  constructor (
     public router: Router,
     public route: ActivatedRoute
-  ) {
- /*   firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-         this.roomkey = this.route.snapshot.paramMap.get('key') as string;
-        var index = user.email.indexOf("@");
-        this.nickname = user.email.substring(0, index);
-				firebase.database().ref('chatrooms/' + this.roomkey + '/roomname').once('value')
-					.then((roomdata) => {
-						this.roomname = roomdata.val();
+  ) { 
+			firebase.auth().onAuthStateChanged((user) => {
+    	  if (user) {
+					console.log('--- CHAT PAGE ---');
+    	    firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
+						snapshot.forEach((data) => {
+							this.currentUser.name = data.val().username;
+							this.currentUser.key =  data.key;
+							console.log(this.currentUser);
+						})
+					}).then(() => {
+						this.chatId = this.router.url.split('/').slice(-1)[0]; 
+						console.log('chatId: ' + this.chatId);
+						firebase.database().ref('users/' + this.currentUser.key + '/chats/' + this.chatId).once('value', snapshot => {
+							this.user2.key = snapshot.child('user2Key').val();
+							this.user2.name = snapshot.child('user2Name').val();
+							console.log(this.user2);
+						})
+					}).then(() => {
+						this.displayChatMessage();
+    				this.scroll();
 					})
-					.catch((error) => {
-						console.log(error.message);
-						this.roomname = null;
-					});
-
-        this.sendJoinMessage();
-        this.displayChatMessage();
-        this.scroll();
-      }
-			else {
-        this.router.navigate(['/signin']);
-      }
-    }); */
-  }
-
+				
+				}	else {
+    	    this.router.navigate(['/signin']);
+				}
+			})
+		}
+ 
   ngOnInit() {
+	}
+
+  displayChatMessage() {
+		console.log('display');
+    firebase.database().ref('chats/' + this.chatId + '/messages').on('value', snapshot => {
+      if (snapshot) {
+				// console.log(snapshot.val())
+        this.messages = [];
+        snapshot.forEach(data => {
+					console.log("msg: ");
+					console.log(data.val());
+          const msg = data.val();
+          msg.key = data.key;
+          this.messages.push(msg);
+        });
+      }
+    });
   }
 
-/*   displayChatMessage() {
-    firebase.database()
-      .ref('chatrooms/' + this.roomkey + '/chats')
-      .on('value', resp => {
-        if (resp) {
-          this.chats = [];
-          resp.forEach(childSnapshot => {
-            const chat = childSnapshot.val();
-            chat.key = childSnapshot.key;
-            this.chats.push(chat);
-          });
-        }
-      });
-  }
-
-  private scroll() {
-    setTimeout(() => {
-      this.content.scrollToBottom(300);
-    }, 1000);
-  }
-
-  exitChat() {
-    this.sendExitMessage();
+  goBack() {
     this.offStatus = true;
     this.router.navigate(['/room']);
   }
 
-  sendChatMessage() {
-    if (this.chatMessage !== "") this.sendMessage('message', this.chatMessage);
-  }
-
+/* 
   sendJoinMessage() {
 		firebase.database().ref('chatrooms/' + this.roomkey + '/roomname').once('value')
 			.then((roomdata) => {
@@ -103,8 +108,8 @@ export class ChatPage implements OnInit {
 				console.log(error.message);
 			});
 	//	this.sendMessage('exit', this.nickname + ' has exited this room.');
-  }
-
+  } */
+/*
   sendDeleteMessage(chat) {
 	firebase.database().ref('chatrooms/' + this.roomkey + '/chats/' + chat.key).remove()
 		.then(function() {
@@ -114,17 +119,26 @@ export class ChatPage implements OnInit {
 		    console.log("Remove failed: " + error.message)
 		});
 	}
+*/
 
-  sendMessage(type: string, message: string) {
-    const newData = firebase.database().ref('chatrooms/' + this.roomkey + '/chats').push();
-    newData.set({
-      type: type,
-      user: this.nickname,
-      message: message,
-      sendDate: Date()
-    });
-    this.chatMessage = ""
-    this.scroll();
+  private scroll() {
+    setTimeout(() => {
+      this.content.scrollToBottom(300);
+    }, 1000);
   }
- */
+
+
+	sendMessage(content: string) {
+		if (this.chatMessage !== "") {
+	  	const newData = firebase.database().ref('chats/' + this.chatId + '/messages/').push();
+	  	newData.set({
+	  	  senderId: this.currentUser.key,
+	  	  receiverId: this.user2.key,
+				content: content,
+	  	  date: Date()
+			});
+		this.chatMessage = ""
+  	this.scroll();
+		}
+	}	
 }

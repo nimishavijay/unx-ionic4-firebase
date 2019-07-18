@@ -13,7 +13,10 @@ import { RoomPage } from '../room/room.page' ;
 export class AddRoomPage implements OnInit {
 
   users;
-	currentUser;
+	currentUser = {
+		key: '',
+		name: ''
+	};
 
   constructor(private router: Router) { }
 
@@ -22,7 +25,7 @@ export class AddRoomPage implements OnInit {
 			if (user) {
 				firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).on('value', snapshot => {
 					snapshot.forEach((data) => {
-						this.currentUser = data.val();
+						this.currentUser.name = data.val().username;
 						this.currentUser.key =  data.key;
 						// console.log(this.currentUser);
 					})
@@ -31,13 +34,8 @@ export class AddRoomPage implements OnInit {
 					this.users = [];
 					resp.forEach(child => {
 						if (child.key !== this.currentUser.key) {				
-							const user = child.val(); 
-/* ---
-	HUGE PROBLEM HERE. If the entire contents of child.val() are copied to user,
-	then the active user might have access to the other user's chats.
-	Change security rules.
-*/ 
-							user.username = child.val().username;
+							var user = { key: '', name: '' }; 
+							user.name = child.val().username;
 							user.key = child.key;
 							this.users.push(user);			
 						}			
@@ -53,19 +51,31 @@ export class AddRoomPage implements OnInit {
 		firebase.database().ref('users/' + this.currentUser.key + '/chats/').orderByChild('user2Key').equalTo(userKey).on('value', snapshot => {
 			// console.log(snapshot.val());
 			if (snapshot.val() === null) this.newChat(userKey);
-			else snapshot.forEach(() => this.goToChat(userKey));
+			else snapshot.forEach(() => this.goToChat(snapshot.key));
 		})
 	}
 
-	goToChat(userKey) {
-		console.log('navigate to /chats/' + userKey);
+	goToChat(chatKey) {
+		console.log('navigate to /chat/' + chatKey);
+		this.router.navigate(['chat/' + chatKey]);
 	}
 
+
+
 	newChat(userKey) {
-		var user2Data;
-		firebase.database().ref('users/').orderByKey().equalTo(userKey).on('value', snapshot => {
+
+	/***
+	 Error: Reference.update failed: First argument contains undefined in property 
+	'users.-LjvYcggsxEnvTOBNTTN.chats.-Lk5kDLDWxCNqDAuGoPh.user2Name' 
+	Maybe delete users and try again? the db seems messed up
+	***/
+	
+		var user2 = { key: '', name: '' };
+		firebase.database().ref('users/' + userKey).on('value', snapshot => {
+			console.log(snapshot.val());
 			snapshot.forEach((data) => {
-				user2Data = data.val();
+				user2.key = data.key;
+				user2.name = data.val().username;
 				// console.log(data.val());
 			})
 		});
@@ -79,14 +89,18 @@ export class AddRoomPage implements OnInit {
 			.catch((error) => console.log(error.message));
 		
 		firebase.database().ref('users/' + this. currentUser.key + '/chats/' + newDataChat.key).update({ 
-			user2Key: userKey,
-			user2Name: user2Data.username
+			user2Key: user2.key,
+			user2Name: user2.name
 		}).then(() => console.log("Chat pushed to user1db"));
 		
 		firebase.database().ref('users/' + userKey + '/chats/' + newDataChat.key).update({ 
 			user2Key: this.currentUser.key,
-			user2Name: this.currentUser.username
+			user2Name: this.currentUser.name
 		}).then(() => console.log("Chat pushed to user2db"));	
+
+		console.log('navigate to chat/' + newDataChat.key);
+		this.router.navigate(['chat/' + newDataChat.key])
+
 	}
 
 	goBack() {
