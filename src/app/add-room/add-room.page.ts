@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { NAMED_ENTITIES } from '@angular/compiler';
-import { RoomPage } from '../room/room.page' ;
 
 @Component({
   selector: 'app-add-room',
@@ -12,8 +11,12 @@ import { RoomPage } from '../room/room.page' ;
 
 export class AddRoomPage implements OnInit {
 
-  users;
+  users = [];
 	currentUser = {
+		key: '',
+		name: ''
+	};
+	user2 = {
 		key: '',
 		name: ''
 	};
@@ -21,13 +24,14 @@ export class AddRoomPage implements OnInit {
   constructor(private router: Router) { }
 
   async ngOnInit() {
+		console.log('---NEW CHAT PAGE---');
 		firebase.auth().onAuthStateChanged(async (user) => {
 			if (user) {
 				firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).on('value', snapshot => {
 					snapshot.forEach((data) => {
 						this.currentUser.name = data.val().username;
 						this.currentUser.key =  data.key;
-						// console.log(this.currentUser);
+						console.log(this.currentUser);
 					})
 				});				
 					firebase.database().ref('users/').on('value', resp => {
@@ -49,9 +53,9 @@ export class AddRoomPage implements OnInit {
 
 	async chatWithUser(userKey) {	
 		firebase.database().ref('users/' + this.currentUser.key + '/chats/').orderByChild('user2Key').equalTo(userKey).on('value', snapshot => {
-			// console.log(snapshot.val());
-			if (snapshot.val() === null) this.newChat(userKey);
-			else snapshot.forEach(() => this.goToChat(snapshot.key));
+			console.log('chat with user', snapshot.val(), 'user key', userKey);
+			if (snapshot.val() === null) this.newChat(userKey) //console.log("newchat");
+			else snapshot.forEach((data) => { console.log('gotochat ', data.key) ; this.goToChat(data.key) });
 		})
 	}
 
@@ -64,43 +68,38 @@ export class AddRoomPage implements OnInit {
 
 	newChat(userKey) {
 
-	/***
-	 Error: Reference.update failed: First argument contains undefined in property 
-	'users.-LjvYcggsxEnvTOBNTTN.chats.-Lk5kDLDWxCNqDAuGoPh.user2Name' 
-	Maybe delete users and try again? the db seems messed up
-	***/
-	
-		var user2 = { key: '', name: '' };
 		firebase.database().ref('users/' + userKey).on('value', snapshot => {
 			console.log(snapshot.val());
-			snapshot.forEach((data) => {
-				user2.key = data.key;
-				user2.name = data.val().username;
-				// console.log(data.val());
-			})
+			this.user2.key = userKey;
+			this.user2.name = snapshot.val().username;
+			console.log("To create chat with: ", this.user2);
 		});
 		
 		const newDataChat = firebase.database().ref('chats/').push();
-		newDataChat.set({
+		var chatDataPromise = newDataChat.set({
 			mentor: userKey,
 			mentee: this.currentUser.key,
 			created: Date()
-		}).then(() => console.log("Chat pushed to chatdb"))
+		}).then(() => console.log("Chat pushed to chatdb. Details: ", newDataChat))
 			.catch((error) => console.log(error.message));
-		
-		firebase.database().ref('users/' + this. currentUser.key + '/chats/' + newDataChat.key).update({ 
-			user2Key: user2.key,
-			user2Name: user2.name
-		}).then(() => console.log("Chat pushed to user1db"));
-		
-		firebase.database().ref('users/' + userKey + '/chats/' + newDataChat.key).update({ 
-			user2Key: this.currentUser.key,
-			user2Name: this.currentUser.name
-		}).then(() => console.log("Chat pushed to user2db"));	
+
+		chatDataPromise.then(() => { 
+			firebase.database().ref('users/' + this. currentUser.key + '/chats/' + newDataChat.key).update({ 
+				user2Key: this.user2.key,
+				user2Name:this.user2.name
+			}).then(() => console.log("Chat pushed to user1db"));
+		}).catch((error) => console.log(error.message));
+
+		chatDataPromise.then(() => {
+			firebase.database().ref('users/' + userKey + '/chats/' + newDataChat.key).update({ 
+				user2Key: this.currentUser.key,
+				user2Name: this.currentUser.name
+			}).then(() => console.log("Chat pushed to user2db"));	
+		}).catch((error) => console.log(error.message));
 
 		console.log('navigate to chat/' + newDataChat.key);
 		this.router.navigate(['chat/' + newDataChat.key])
-
+			
 	}
 
 	goBack() {

@@ -41,7 +41,7 @@ export class ChatPage implements OnInit {
 						snapshot.forEach((data) => {
 							this.currentUser.name = data.val().username;
 							this.currentUser.key =  data.key;
-							console.log(this.currentUser);
+							console.log('currentUser: ', this.currentUser);
 						})
 					}).then(() => {
 						this.chatId = this.router.url.split('/').slice(-1)[0]; 
@@ -49,7 +49,7 @@ export class ChatPage implements OnInit {
 						firebase.database().ref('users/' + this.currentUser.key + '/chats/' + this.chatId).once('value', snapshot => {
 							this.user2.key = snapshot.child('user2Key').val();
 							this.user2.name = snapshot.child('user2Name').val();
-							console.log(this.user2);
+							console.log('user2: ', this.user2);
 						})
 					}).then(() => {
 						this.displayChatMessage();
@@ -72,10 +72,9 @@ export class ChatPage implements OnInit {
 				// console.log(snapshot.val())
         this.messages = [];
         snapshot.forEach(data => {
-					console.log("msg: ");
-					console.log(data.val());
           const msg = data.val();
           msg.key = data.key;
+					// console.log("msg: ", msg);
           this.messages.push(msg);
         });
       }
