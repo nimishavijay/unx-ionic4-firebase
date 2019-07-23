@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'add-room', loadChildren: './add-room/add-room.module#AddRoomPageModule' },
   { path: 'chat', loadChildren: './chat/chat.module#ChatPageModule' },
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
+  { path: 'account', loadChildren: './account/account.module#AccountPageModule' },
 ];
 
 @NgModule({

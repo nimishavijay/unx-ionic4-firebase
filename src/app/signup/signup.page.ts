@@ -11,12 +11,7 @@ import * as firebase from 'firebase';
 })
 export class SignupPage implements OnInit {
 
-  data: { 
-		email: string, 
-		password: string, 
-		confirm: string, 
-		username: string, 
-	} = { 
+  data = { 
 		email: '',
 		password: '', 
 		confirm: '', 
@@ -29,6 +24,10 @@ export class SignupPage implements OnInit {
   ) { }
 
   ngOnInit() {
+		this.data.email = '';
+		this.data.password = ''; 
+		this.data.confirm = ''; 
+		this.data.username = '';
   }
 
   async signUp() {

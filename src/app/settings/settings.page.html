@@ -1,9 +1,56 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>settings</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Settings</ion-title>
+    <ion-buttons slot="start">
+      <ion-button icon-only (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
 
+<ion-content padding>
+	<ion-list>
+		<ion-list>
+		  <ion-radio-group [(ngModel)]='type' name='type' (ionChange)='setType(type)'>
+		 
+		  	<ion-item>
+					<ion-label>Currently using as: </ion-label>
+				</ion-item>
+
+		    <ion-item>
+					<ion-label>Mentor</ion-label>
+		      <ion-radio slot="start" value="mentor"></ion-radio>
+					<ion-icon name='settings'size='small' color='primary' slot='end' (click)='goToMentorSettings()'></ion-icon>
+		    </ion-item>
+
+		    <ion-item>
+		      <ion-label>Mentee</ion-label>
+		      <ion-radio slot="start" value="mentee"></ion-radio>
+					<ion-icon name='settings'size='small' color='primary' slot='end' (click)='goToMenteeSettings()'></ion-icon>
+		    </ion-item>
+		 
+		  </ion-radio-group>
+		</ion-list>
+
+		<ion-item-divider>
+			<ion-item (click)='goToAccount()'>
+				<ion-label>Account settings</ion-label>
+			</ion-item> 
+		</ion-item-divider>
+
+		<ion-item-divider>
+			<ion-item (click)='goToAbout()'>
+				<ion-label>About</ion-label>
+			</ion-item> 
+		</ion-item-divider>
+
+		<ion-item-divider>
+			<ion-item (click)='goToHelp()'>
+				<ion-label>Help</ion-label>
+			</ion-item> 
+		</ion-item-divider>
+
+	</ion-list>
 </ion-content>

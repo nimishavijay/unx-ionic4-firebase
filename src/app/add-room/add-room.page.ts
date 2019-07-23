@@ -94,12 +94,12 @@ export class AddRoomPage implements OnInit {
 			firebase.database().ref('users/' + userKey + '/chats/' + newDataChat.key).update({ 
 				user2Key: this.currentUser.key,
 				user2Name: this.currentUser.name
-			}).then(() => console.log("Chat pushed to user2db"));	
+			}).then(() => {
+				console.log("Chat pushed to user2db")
+				console.log('navigate to chat/' + newDataChat.key);
+				this.router.navigate(['chat/' + newDataChat.key])
+			});	
 		}).catch((error) => console.log(error.message));
-
-		console.log('navigate to chat/' + newDataChat.key);
-		this.router.navigate(['chat/' + newDataChat.key])
-			
 	}
 
 	goBack() {

@@ -51,9 +51,9 @@ export class ChatPage implements OnInit {
 							this.user2.name = snapshot.child('user2Name').val();
 							console.log('user2: ', this.user2);
 						})
-					}).then(() => {
-						this.displayChatMessage();
-    				this.scroll();
+					})
+					.then(() => {
+						this.ngOnInit()
 					})
 				
 				}	else {
@@ -63,10 +63,12 @@ export class ChatPage implements OnInit {
 		}
  
   ngOnInit() {
+		this.displayChatMessage();
+		this.scroll();
 	}
 
   displayChatMessage() {
-		console.log('display');
+		// console.log('display');
     firebase.database().ref('chats/' + this.chatId + '/messages').on('value', snapshot => {
       if (snapshot) {
 				// console.log(snapshot.val())
@@ -79,6 +81,7 @@ export class ChatPage implements OnInit {
         });
       }
     });
+		// this.scroll();
   }
 
   goBack() {
@@ -86,44 +89,10 @@ export class ChatPage implements OnInit {
     this.router.navigate(['/room']);
   }
 
-/* 
-  sendJoinMessage() {
-		firebase.database().ref('chatrooms/' + this.roomkey + '/roomname').once('value')
-			.then((roomdata) => {
-				console.log(this.nickname + ' has joined ' + roomdata.val());
-			})
-			.catch((error) => {
-				console.log(error.message);
-				});
-  //  this.sendMessage('join', this.nickname + ' has joined this room.');
-  }
-
-  sendExitMessage() {
-    firebase.database().ref('chatrooms/' + this.roomkey + '/roomname').once('value')
-			.then((roomdata) => {
-				console.log(this.nickname + ' has exited ' + roomdata.val());
-			})
-			.catch((error) => {
-				console.log(error.message);
-			});
-	//	this.sendMessage('exit', this.nickname + ' has exited this room.');
-  } */
-/*
-  sendDeleteMessage(chat) {
-	firebase.database().ref('chatrooms/' + this.roomkey + '/chats/' + chat.key).remove()
-		.then(function() {
-		    console.log("Remove succeeded.")
-		})
-		.catch(function(error) {
-		    console.log("Remove failed: " + error.message)
-		});
-	}
-*/
-
   private scroll() {
-    setTimeout(() => {
-      this.content.scrollToBottom(300);
-    }, 1000);
+    setTimeout(() => {  
+			this.content.scrollToBottom(100);
+		}, 100);
   }
 
 

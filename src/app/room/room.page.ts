@@ -73,6 +73,7 @@ export class RoomPage implements OnInit {
 
 	settings() {
 		console.log("navigate to settings");
+		this.router.navigate(['/settings']);
 	}
 
   async signOut() {

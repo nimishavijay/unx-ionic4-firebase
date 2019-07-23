@@ -11,10 +11,7 @@ import * as firebase from 'firebase';
 })
 export class SigninPage implements OnInit {
 
-  data: { 
-		email: string, 
-		password: string 
-	} = { 
+  data = { 
 		email: '', 
 		password: '' 
 	};
@@ -25,13 +22,16 @@ export class SigninPage implements OnInit {
   ) { }
 
   ngOnInit() {
+		this.data.email = '';
+		this.data.password = '';
   }
+
   async signIn() {
     try {
       await firebase
         .auth()
         .signInWithEmailAndPassword(this.data.email, this.data.password);
-        this.router.navigate(['/room']);
+        this.router.navigate(['/account']);
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',
