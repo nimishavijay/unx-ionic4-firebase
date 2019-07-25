@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Type</ion-title>
+    <ion-buttons slot="start">
+      <ion-button icon-only (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+<!-- 		<ion-list>
+		  <ion-radio-group [(ngModel)]='type' name='type'>
+		 
+		  	<ion-item>
+					<ion-label>Currently using as: </ion-label>
+				</ion-item>
+
+		    <ion-item>
+					<ion-label>Mentor</ion-label>
+		      <ion-radio slot="start" value="mentor"></ion-radio>
+		    </ion-item>
+
+		    <ion-item>
+		      <ion-label>Mentee</ion-label>
+		      <ion-radio slot="start" value="mentee"></ion-radio>
+		    </ion-item>
+
+		  </ion-radio-group>
+		</ion-list> -->
+	<ion-grid>
+		<ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column">
+		<ion-col align-self-center>
+	<ion-item text-center>
+		<ion-label>Currently using as: </ion-label>
+	</ion-item>
+	<ion-list>
+			<!-- <ion-row align-items-center justify-content-center> -->
+				<ion-row justify-content-center>
+					<ion-button color="primary" type="button" (click)="signIn()">Mentor</ion-button>
+				</ion-row>
+				<ion-row style='height: 100%; flex-direction: column'></ion-row>
+				<ion-row justify-content-center>
+					<ion-button color="primary" type="button" (click)="signUp()">Mentee</ion-button>
+				</ion-row>
+			<!-- </ion-row> -->
+		</ion-list>
+		</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-content>
+
+<ion-footer>
+	<ion-toolbar>
+	<ion-buttons slot='end'>
+	<ion-button fill='clear' >> Continue</ion-button>
+	</ion-buttons>
+	</ion-toolbar>
+</ion-footer>

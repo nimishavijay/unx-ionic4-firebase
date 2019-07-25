@@ -11,6 +11,8 @@ const routes: Routes = [
   { path: 'chat', loadChildren: './chat/chat.module#ChatPageModule' },
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
   { path: 'account', loadChildren: './account/account.module#AccountPageModule' },
+  { path: 'password', loadChildren: './password/password.module#PasswordPageModule' },
+  { path: 'type', loadChildren: './type/type.module#TypePageModule' },
 ];
 
 @NgModule({

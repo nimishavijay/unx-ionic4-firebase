@@ -4,23 +4,33 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <form>
+<ion-content padding class='center-content'>
+	<ion-grid style='height: 100%;'>
+	<ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column">
+		<ion-col align-self-center>
     <ion-list>
       <ion-item>
         <ion-label position="floating">E-mail</ion-label>
         <ion-input type="text" [(ngModel)]="data.email" name="email" required></ion-input>
       </ion-item>
+
       <ion-item>
         <ion-label position="floating">Password</ion-label>
         <ion-input type="password" [(ngModel)]="data.password" name="password" required></ion-input>
       </ion-item>
     </ion-list>
-    <p>
-      <ion-button expand="block" color="primary" type="button" (click)="signIn()">Sign In</ion-button>
-    </p>
-    <p>
-      <ion-button expand="block" fill="clear" color="primary" type="button" (click)="signUp()">Sign Up</ion-button>
-    </p>
-  </form>
+
+		<ion-list>
+			<!-- <ion-row align-items-center justify-content-center> -->
+				<ion-row justify-content-center>
+					<ion-button color="primary" type="button" (click)="signIn()">Sign In</ion-button>
+				</ion-row>
+				<ion-row justify-content-center>
+					<ion-button fill="clear" color="primary" type="button" (click)="signUp()">Sign Up</ion-button>
+				</ion-row>
+			<!-- </ion-row> -->
+		</ion-list>
+		</ion-col>
+	</ion-row>
+	</ion-grid>
 </ion-content>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
@@ -9,7 +9,7 @@ import * as firebase from 'firebase';
   templateUrl: './signin.page.html',
   styleUrls: ['./signin.page.scss'],
 })
-export class SigninPage implements OnInit {
+export class SigninPage implements OnInit, OnDestroy {
 
   data = { 
 		email: '', 
@@ -26,12 +26,15 @@ export class SigninPage implements OnInit {
 		this.data.password = '';
   }
 
+	ngOnDestroy() {
+		this.data.email = '';
+		this.data.password = '';
+	}
+
   async signIn() {
     try {
-      await firebase
-        .auth()
-        .signInWithEmailAndPassword(this.data.email, this.data.password);
-        this.router.navigate(['/account']);
+      await firebase.auth().signInWithEmailAndPassword(this.data.email, this.data.password);
+        this.router.navigate(['/type']);
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',

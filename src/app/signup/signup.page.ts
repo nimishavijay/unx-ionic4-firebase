@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,7 +9,7 @@ import * as firebase from 'firebase';
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
 })
-export class SignupPage implements OnInit {
+export class SignupPage implements OnInit, OnDestroy {
 
   data = { 
 		email: '',
@@ -30,6 +30,13 @@ export class SignupPage implements OnInit {
 		this.data.username = '';
   }
 
+	ngOnDestroy() {
+		this.data.email = '';
+		this.data.password = ''; 
+		this.data.confirm = ''; 
+		this.data.username = '';
+	}
+
   async signUp() {
     try {
 			if (this.data.password !== this.data.confirm) {
@@ -42,23 +49,12 @@ export class SignupPage implements OnInit {
 				photoURL: null
 			}).then(() => console.log("updated profile: \n" + activeUser) )
 				.catch((error) => console.log(error.message))
-		/* 
-			var newUser = firebase.database().ref('users/').push();
-			console.log(activeUser);
-			newUser.set({
-				'info': activeUser
-			})
-				.then(() => console.log('set info: ' + activeUser))
-				.catch((error) => console.log(error.message));
-			 */
-			
+
 			const newData = firebase.database().ref("users/").push();
 			newData.set({
-				// info: {
-					email: activeUser.email,
-					username: activeUser.displayName,
-					uid: activeUser.uid,
-				// },
+				email: activeUser.email,
+				username: activeUser.displayName,
+				uid: activeUser.uid,
 				chats: { } 
 			});
 			

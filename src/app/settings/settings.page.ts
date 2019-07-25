@@ -28,12 +28,12 @@ export class SettingsPage implements OnInit {
 		console.log("---SETTINGS---");
 		firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
+			await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
 				snapshot.forEach((data) => {
 					this.currentUser.name = data.val().username;
 					this.currentUser.key =  data.key;
 					this.type = data.val().currentState;
-					console.log(this.currentUser.key);
+					console.log("Current user: ", this.currentUser.key);
 					})
 				})
 				console.log("type: ", this.type);
@@ -42,7 +42,7 @@ export class SettingsPage implements OnInit {
 			}
 		})
 	}
-	
+
 	setType(type: string) {
 		firebase.database().ref('users/' + this.currentUser.key).child('currentState').set(type)
 		.then(() => {
@@ -50,17 +50,23 @@ export class SettingsPage implements OnInit {
 		})
 	}
 
+	goBack() {
+		this.router.navigate(['/room']);
+	}
+	
 	goToMentorSettings() {
+		this.router.navigate(['/room']);
 		console.log('navigate to /mentor');
 	}
 
 	goToMenteeSettings() {
 		console.log('navigate to /mentee');
+		this.router.navigate(['/mentee']);
 	}
 
 	goToAccount() {
-	console.log("navigate to /account");
-		// this.router.navigate(['/account']);
+		console.log("navigate to /account");
+		this.router.navigate(['/account']);
 }
 
 	goToAbout() {
@@ -73,8 +79,5 @@ export class SettingsPage implements OnInit {
 		// this.router.navigate(['/help']);
 	}
 
-	goBack() {
-		this.router.navigate(['/room']);
-	}
 
 }
