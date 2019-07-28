@@ -2,9 +2,9 @@
   <ion-toolbar color="primary">
     <ion-title>Type</ion-title>
     <ion-buttons slot="start">
-      <ion-button icon-only (click)="goBack()">
+     <!--  <ion-button icon-only (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
-      </ion-button>
+      </ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -35,26 +35,28 @@
 	<ion-item text-center>
 		<ion-label>Currently using as: </ion-label>
 	</ion-item>
+	<ion-radio-group>
 	<ion-list>
 			<!-- <ion-row align-items-center justify-content-center> -->
 				<ion-row justify-content-center>
-					<ion-button color="primary" type="button" (click)="signIn()">Mentor</ion-button>
+					<ion-button color="primary" fill="{{button1.fill}}" type="button" (click)="setToMentor()">Mentor</ion-button>
 				</ion-row>
 				<ion-row style='height: 100%; flex-direction: column'></ion-row>
 				<ion-row justify-content-center>
-					<ion-button color="primary" type="button" (click)="signUp()">Mentee</ion-button>
+					<ion-button color="primary" fill="{{button2.fill}}" type="button" (click)="setToMentee()">Mentee</ion-button>
 				</ion-row>
 			<!-- </ion-row> -->
 		</ion-list>
+	</ion-radio-group>
 		</ion-col>
 		</ion-row>
 	</ion-grid>
 </ion-content>
 
 <ion-footer>
-	<ion-toolbar>
+	<ion-toolbar colour='light'>
 	<ion-buttons slot='end'>
-	<ion-button fill='clear' >> Continue</ion-button>
+	<ion-button fill='clear' disabled='{{cont.disabled}}'  color="primary" (click)='continue()'>> Continue</ion-button>
 	</ion-buttons>
 	</ion-toolbar>
 </ion-footer>

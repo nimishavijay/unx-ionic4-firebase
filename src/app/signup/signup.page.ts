@@ -47,19 +47,18 @@ export class SignupPage implements OnInit, OnDestroy {
 			await activeUser.updateProfile({
 				displayName: this.data.username,
 				photoURL: null
-			}).then(() => console.log("updated profile: \n" + activeUser) )
+			}).then(() => console.log("updated profile: \n", activeUser) )
 				.catch((error) => console.log(error.message))
 
 			const newData = firebase.database().ref("users/").push();
-			newData.set({
+			await newData.set({
 				email: activeUser.email,
 				username: activeUser.displayName,
 				uid: activeUser.uid,
-				chats: { } 
 			});
 			
 			console.log(this.data.username + ' signed up');
-    	this.router.navigate(['/room']);
+    	this.router.navigate(['/type']);
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',
