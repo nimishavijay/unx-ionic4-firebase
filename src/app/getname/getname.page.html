@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>New Session</ion-title>
+    <ion-buttons slot="start">
+      <ion-button icon-only (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+	<ion-grid style='height: 100%;'>
+	<ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column">
+		<ion-col align-self-center>
+    
+		  <ion-row justify-content-center>
+      	<ion-item text-wrap>
+					<ion-label text-wrap>What would you like to be called for this session?</ion-label>
+      	</ion-item>
+			</ion-row>
+		
+			<ion-row justify-content-center>
+				<ion-item>
+					<ion-input type="text" placeholder='Nickname' [(ngModel)]="name" name="name" required></ion-input>
+				</ion-item>
+			</ion-row>
+		
+			<ion-row style="height: 5%"></ion-row>
+		
+			<ion-row justify-content-center>
+				<ion-button color="primary" type="button" [disabled]="!name" (click)="adminChat()">Continue</ion-button>
+			</ion-row>
+		
+		</ion-col>
+	</ion-row>
+	</ion-grid>
+</ion-content>

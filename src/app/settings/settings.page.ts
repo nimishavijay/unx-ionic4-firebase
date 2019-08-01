@@ -55,13 +55,13 @@ export class SettingsPage implements OnInit {
 	}
 	
 	goToMentorSettings() {
-		this.router.navigate(['/room']);
 		console.log('navigate to /mentor');
+		// this.router.navigate(['/mentor']);
 	}
 
 	goToMenteeSettings() {
 		console.log('navigate to /mentee');
-		this.router.navigate(['/mentee']);
+		// this.router.navigate(['/mentee']);
 	}
 
 	goToAccount() {

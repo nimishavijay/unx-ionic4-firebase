@@ -53,19 +53,31 @@ export class SignupPage implements OnInit, OnDestroy {
 			}).then(() => console.log("updated profile: \n", activeUser) )
 				.catch((error) => console.log(error.message))
 
-			const newData = firebase.database().ref("users/").push();
-			await newData.set({
-				type: (activeUser.email.indexOf("unx.life") !== -1) ? "admin": null, 
-				email: activeUser.email,
-				username: activeUser.displayName,
-				uid: activeUser.uid,
-			});
+			var type = (activeUser.email.indexOf("unx.life") !== -1) ? "admin": null
 			
-			this.presentToast("Successfully signed up");
-    	newData.child("type").once("value", snapshot => {
-				if (snapshot.val() == null) this.router.navigate(['/type'])
-				// else this.router.navigate(['/adminhome']);
-			})
+			if (type === "admin") {
+				const newData = firebase.database().ref('admins/').push();
+				await newData.set({
+					email: activeUser.email,
+					username: activeUser.displayName,
+					uid: activeUser.uid,
+					requests: 0
+				});
+				this.router.navigate(['/adminhome']);
+			}
+			else {
+				const newData = firebase.database().ref("users/").push();
+				await newData.set({
+					email: activeUser.email,
+					username: activeUser.displayName,
+					uid: activeUser.uid,
+					mentor: false,
+					mentee: false
+				});
+				this.presentToast("Successfully signed up");
+				this.router.navigate(['/type']);
+			}
+			
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',

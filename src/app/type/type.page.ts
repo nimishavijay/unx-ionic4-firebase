@@ -57,6 +57,7 @@ export class TypePage implements OnInit {
 				await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).on('value', snapshot => {
 					console.log(snapshot);
 					snapshot.forEach(data => {
+						firebase.database().ref("users/" + data.key + "/" + this.type).set(true);
 						firebase.database().ref("users/" + data.key + "/currentState").set(this.type);
 						thisUser = data.key;
 					})

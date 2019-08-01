@@ -67,8 +67,17 @@ export class MenteehomePage implements OnInit {
 		this.router.navigate(['/chat/' + chatKey]);
 	}
 
-  newChatPage() {
-    this.router.navigate(['/add-room']);
+  async newChat() {
+    // this.router.navigate(['/add-room']);
+/* 		firebase.database().ref('admins/').orderByChild("requests").limitToFirst(1).once("value", snapshot => {
+				snapshot.forEach(data => {
+					// var currentrequests = data.val().requests;
+					data.child("requests").ref.transaction((currentrequests) => { 
+						return currentrequests + 1 
+					}).then(() => console.log(data.val()))
+				})
+		}) */
+		this.router.navigate(['/getname']);
   }
 
 	settings() {
