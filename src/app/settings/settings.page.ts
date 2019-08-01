@@ -51,7 +51,7 @@ export class SettingsPage implements OnInit {
 	}
 
 	goBack() {
-		this.router.navigate(['/room']);
+		this.router.navigate(['/menteehome']);
 	}
 	
 	goToMentorSettings() {

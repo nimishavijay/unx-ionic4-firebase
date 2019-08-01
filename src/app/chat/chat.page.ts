@@ -86,7 +86,7 @@ export class ChatPage implements OnInit {
 
   goBack() {
     this.offStatus = true;
-    this.router.navigate(['/room']);
+    this.router.navigate(['/menteehome']);
   }
 
   private scroll() {

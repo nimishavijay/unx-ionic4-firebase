@@ -103,7 +103,7 @@ export class AddRoomPage implements OnInit {
 	}
 
 	goBack() {
-		this.router.navigate(['/room']);
+		this.router.navigate(['/menteehome']);
 	}
 
 }

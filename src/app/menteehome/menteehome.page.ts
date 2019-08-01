@@ -6,11 +6,11 @@ import { Key } from 'protractor';
 
 
 @Component({
-  selector: 'app-room',
-  templateUrl: './room.page.html',
-  styleUrls: ['./room.page.scss'],
+  selector: 'app-menteehome',
+  templateUrl: './menteehome.page.html',
+  styleUrls: ['./menteehome.page.scss'],
 })
-export class RoomPage implements OnInit {
+export class MenteehomePage implements OnInit {
 
   chats = [];
 	currentUser = {

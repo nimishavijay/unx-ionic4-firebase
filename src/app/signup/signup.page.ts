@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController,ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import * as firebase from 'firebase';
 
@@ -19,8 +20,10 @@ export class SignupPage implements OnInit, OnDestroy {
 	};
 
   constructor(
+		private location: Location,
     private router: Router,
-    public alertController: AlertController
+    public alertController: AlertController,
+		public toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -52,13 +55,17 @@ export class SignupPage implements OnInit, OnDestroy {
 
 			const newData = firebase.database().ref("users/").push();
 			await newData.set({
+				type: (activeUser.email.indexOf("unx.life") !== -1) ? "admin": null, 
 				email: activeUser.email,
 				username: activeUser.displayName,
 				uid: activeUser.uid,
 			});
 			
-			console.log(this.data.username + ' signed up');
-    	this.router.navigate(['/type']);
+			this.presentToast("Successfully signed up");
+    	newData.child("type").once("value", snapshot => {
+				if (snapshot.val() == null) this.router.navigate(['/type'])
+				// else this.router.navigate(['/adminhome']);
+			})
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',
@@ -67,5 +74,13 @@ export class SignupPage implements OnInit, OnDestroy {
       });
       alert.present();
     }
+  }
+
+	private async presentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 1500
+    });
+    toast.present();
   }
 }

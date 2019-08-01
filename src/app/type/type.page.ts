@@ -38,14 +38,12 @@ export class TypePage implements OnInit {
   }
 
 	setToMentor() {
-		console.log("mentor");
 		this.type = "mentor"
 		this.button1.fill = "solid";
 		this.button2.fill = "outline";
 		this.cont.disabled = "false";
 	}
 	setToMentee() {
-		console.log("mentee");
 		this.type = "mentee";
 		this.button2.fill = "solid";
 		this.button1.fill = "outline";
@@ -62,7 +60,7 @@ export class TypePage implements OnInit {
 						firebase.database().ref("users/" + data.key + "/currentState").set(this.type);
 						thisUser = data.key;
 					})
-					this.router.navigate(['/room']);
+					this.router.navigate(['/menteehome']);
 				});	
 			} else this.router.navigate(['/signin']);
 		})	
