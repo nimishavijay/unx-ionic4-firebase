@@ -12,7 +12,7 @@ import * as firebase from 'firebase';
 })
 export class SignupPage implements OnInit, OnDestroy {
 
-  data = { 
+  data: any = { 
 		email: '',
 		password: '', 
 		confirm: '', 
@@ -66,13 +66,13 @@ export class SignupPage implements OnInit, OnDestroy {
 				this.router.navigate(['/adminhome']);
 			}
 			else {
-				const newData = firebase.database().ref("users/").push();
+				const newData = await firebase.database().ref("users/").push({ email: activeUser.email});
 				await newData.set({
 					email: activeUser.email,
 					username: activeUser.displayName,
 					uid: activeUser.uid,
 					mentor: false,
-					mentee: false
+					mentee: false 
 				});
 				this.presentToast("Successfully signed up");
 				this.router.navigate(['/type']);

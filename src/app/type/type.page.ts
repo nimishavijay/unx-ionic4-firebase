@@ -23,7 +23,7 @@ export class TypePage implements OnInit {
 		disabled: "true"
 	};
 
-	currentUser = {
+	currentUser: any = {
 		key: "",
 		name: ""
 	};
@@ -35,6 +35,13 @@ export class TypePage implements OnInit {
 	) { }
 
   ngOnInit() {
+		firebase.auth().onAuthStateChanged(async (user) => {
+	    if (user) {
+				console.log(firebase.auth().currentUser.uid);
+  		} else {
+				this.router.navigate(['/signin']);
+			}
+		})
   }
 
 	setToMentor() {
@@ -51,19 +58,15 @@ export class TypePage implements OnInit {
 	}
 
 	async continue() {
-		firebase.auth().onAuthStateChanged(async (user) => {
-			if (user) {
-				var thisUser;
-				await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).on('value', snapshot => {
-					console.log(snapshot);
-					snapshot.forEach(data => {
-						firebase.database().ref("users/" + data.key + "/" + this.type).set(true);
-						firebase.database().ref("users/" + data.key + "/currentState").set(this.type);
-						thisUser = data.key;
-					})
-					this.router.navigate(['/menteehome']);
-				});	
-			} else this.router.navigate(['/signin']);
-		})	
+		var thisUser: string;
+		await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).on('value', snapshot => {
+			console.log(snapshot);
+			snapshot.forEach(data => {
+				firebase.database().ref("users/" + data.key + "/currentState").set(this.type);
+				firebase.database().ref("users/" + data.key + "/" + this.type).set(true);
+				thisUser = data.key;
+			})
+			this.router.navigate(['/menteehome']);
+		});		
 	}
 }

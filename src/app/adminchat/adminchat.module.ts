@@ -9,7 +9,7 @@ import { AdminchatPage } from './adminchat.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':key',
     component: AdminchatPage
   }
 ];

@@ -10,5 +10,40 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-list class="chat-list">
+    <ion-item *ngFor="let msg of messages" no-lines>
+			<ion-item slot="end" *ngIf="msg.senderId === currentUser.key;then sentMsgs else receivedMsgs"></ion-item>
+			
+			<ng-template #sentMsgs>
+				<ion-item slot="end">
+      		<ion-label text-wrap class="media-body">
+      		  <div>{{msg.content}}</div>
+						<small>{{msg.date | date: 'dd/MM HH:mm'}}</small>
+      	  </ion-label>
+      	  <tr>   
+      	</ion-item>
+			</ng-template>
 
+      <ng-template #receivedMsgs>
+				<ion-item slot="start">
+      		<ion-label text-wrap class="media-body">
+      		  <div>{{msg.content}}</div>
+						<small>{{msg.date | date: 'dd/MM HH:mm'}}</small>
+      	  </ion-label>
+      	  <tr>   
+      	</ion-item>
+      </ng-template>
+    </ion-item>
+  </ion-list>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-input type="text" placeholder="Type a message" autofocus=true [(ngModel)]="chatMessage" name="message"></ion-input>
+    <ion-buttons slot="end">
+      <ion-button slot="end" color="primary" (click)="sendMessage(chatMessage)">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

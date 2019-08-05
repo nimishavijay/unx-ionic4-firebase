@@ -18,31 +18,32 @@ export class MenteehomePage implements OnInit {
 		name: ''
 	};
 
-  constructor(private router: Router) { }
+  constructor(
+		private router: Router
+	) { }
 
 	async ngOnInit() {
 		console.log('---EXISTING CHATS---');
 	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
+			await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
 				snapshot.forEach((data) => {
 					this.currentUser.name = data.val().username;
 					this.currentUser.key =  data.key;
 					console.log(this.currentUser.key);
 				})
-			}).then(() => {
-				firebase.database().ref('users/' + this.currentUser.key + '/chats/').on('value', snapshot => {
-					console.log(snapshot);
-					// if (snapshot) {
-						this.chats = [];
-						snapshot.forEach(chat => {
-							// console.log(chat.val());
-							const temp = chat.val();
-							temp.key = chat.key;
-							this.chats.push(temp);
-						}) 
-					// }
-				});
+			})
+			firebase.database().ref('mentees/' + this.currentUser.key + '/chats/').on('value', snapshot => {
+				console.log(snapshot);
+				// if (snapshot) {
+					this.chats = [];
+					snapshot.forEach(chat => {
+						// console.log(chat.val());
+						const temp = chat.val();
+						temp.key = chat.key;
+						this.chats.push(temp);
+					}) 
+				// }
 			});
 			//	console.log(activeUser);
 	    /*  firebase.database().ref('user/').on('value', resp => {
@@ -63,8 +64,8 @@ export class MenteehomePage implements OnInit {
 	  });
 	}
 
-  goToChat(chatKey) {
-		this.router.navigate(['/chat/' + chatKey]);
+  goToChat(chatKey: string) {
+		this.router.navigate(['/adminchat/' + chatKey]);
 	}
 
   async newChat() {

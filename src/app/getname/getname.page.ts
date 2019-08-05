@@ -42,31 +42,41 @@ export class GetnamePage implements OnInit {
 
 	async adminChat() {
 		var adminId: string;
-		firebase.database().ref('admins/').orderByChild("requests").limitToFirst(1).once("value", snapshot => {
+		await firebase.database().ref('admins/').orderByChild("requests").limitToFirst(1).once("value", snapshot => {
 			snapshot.forEach(data => {
 				data.child("requests").ref.transaction((currentrequests) => { 
 					adminId = data.key;
 					return currentrequests + 1 
-				}).then(() => console.log(adminId, data.val()))
+				}).then(() => console.log("adminId: ", adminId))
 			})
 		})
-
-		/* not working from here for some reason? */
+		console.log("mentee: ", this.currentUser.key, "nickname: ", this.name);
 
 		const newData = firebase.database().ref("adminchats/").push();
 		await newData.set({
 			adminId: adminId,
 			menteeId: this.currentUser.key,
 			menteeName: this.name
-		}).then(() => console.log("pushed to adminschats/"))
-		await firebase.database().ref("mentees/" + this.currentUser.key + "/adminchats/" + newData.key).set({
-			adminId: adminId,
-			menteeName: this.name
+		}).then(() => {
+			const helloMessage = newData.child("messages").push();
+			helloMessage.set({
+				senderId: adminId,
+	  	  receiverId: this.currentUser.key,
+				content: "Hi, " + this.name + "! Welcome to UNX. Something something how can I help?",
+	  	  date: Date()
+			})
+			console.log("pushed to adminschats/")
 		})
-		await firebase.database().ref("admins/" + adminId + "/chats/" + newData.key).set({
+		firebase.database().ref("mentees/" + this.currentUser.key + "/chats/" + newData.key).set({
+			adminId: adminId,
+			menteeName: this.name,
+			type: "admin"
+		}).then(() => console.log("pushed to mentees/key/adminchats/"))
+		firebase.database().ref("admins/" + adminId + "/chats/" + newData.key).set({
 			menteeId: this.currentUser.key,
 			menteeName: this.name
-		})
+		}).then(() => console.log("pushed to admin/key/chats/"))
+		this.router.navigate(['/adminchat/'+ newData.key]);
 	}
 
 }
