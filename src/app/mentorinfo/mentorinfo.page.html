@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <!-- <ion-title>New Session</ion-title> -->
+    <!-- <ion-buttons slot="start">
+      <ion-button icon-only (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+	<ion-grid style='height: 100%;'>
+		<ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column">
+			<ion-col align-self-center>
+				
+				<ion-list>
+  	    	<!-- <ion-item text-wrap> -->
+						<ion-label text-wrap><h2>Let's get started! Please answer this quick questionnaire to help us understand you better:</h2> </ion-label>
+  	    	<!-- </ion-item> -->
+				</ion-list>
+			
+				<ion-list>
+					<!-- <ion-item> -->
+						<ion-label text-wrap><h2>Tell us about your background.</h2></ion-label>
+						<!-- </ion-item> -->
+						<ion-item>
+						<ion-textarea type="text" [(ngModel)]="background" name="background" required=true rows=5></ion-textarea>
+					</ion-item>
+				</ion-list>
+	
+				<ion-list>
+					<!-- <ion-item> -->
+							<ion-label text-wrap><h2>How much time can you give to mentoring in a day?</h2></ion-label>
+						<!-- </ion-item> -->
+						<!-- <ion-item> -->
+						<ion-radio-group [(ngModel)]='time' name='time'>
+							<ion-item>
+								<ion-label>less than 1 hour </ion-label>
+								<ion-radio slot='start' value='1'></ion-radio>
+							</ion-item>
+							<ion-item>
+								<ion-label>1 - 2 hours </ion-label>
+								<ion-radio slot='start' value='2'></ion-radio>
+							</ion-item>
+							<ion-item>
+								<ion-label>2 - 4 hours</ion-label>
+								<ion-radio slot='start' value='3'></ion-radio>
+							</ion-item>
+							<ion-item>
+								<ion-label>more than 4 hours</ion-label>
+								<ion-radio slot='start' value='4'></ion-radio>
+							</ion-item>
+						</ion-radio-group>
+					<!-- </ion-item> -->
+				</ion-list>
+			
+				<ion-list>
+					<!-- <ion-item> -->
+							<ion-label text-wrap><h2>In what aspects of life would you be able to provide mentoring?</h2></ion-label>
+						<!-- </ion-item> -->
+						<ion-radio-group [(ngModel)]='area' name='area'>
+							<ion-item>
+								<ion-label>Career</ion-label>
+								<ion-checkbox slot='start' [(ngModel)]='career' value='career'></ion-checkbox>
+							</ion-item>
+							<ion-item>
+								<ion-label>Social (friends/family/relationships)</ion-label>
+								<ion-checkbox slot='start' [(ngModel)]='social' value='social'></ion-checkbox>
+							</ion-item>
+							<ion-item>
+								<ion-label>Emotional</ion-label>
+								<ion-checkbox slot='start' [(ngModel)]='emotional' value='emotional'></ion-checkbox>
+							</ion-item>
+							<ion-item>
+								<ion-label>Self development</ion-label>
+								<ion-checkbox slot='start' [(ngModel)]='self' value='self'></ion-checkbox>
+							</ion-item>
+							<ion-item>
+								<!-- <ion-label text-wrap>Other</ion-label> -->
+								<ion-checkbox slot='start' [(ngModel)]='isOtherChecked' value='other'></ion-checkbox>
+								<ion-input placeholder='Other' [(ngModel)]='other' [disabled]="!isOtherChecked" [required]="isOtherChecked"></ion-input>
+							</ion-item>
+						</ion-radio-group>
+				</ion-list>
+	
+				<ion-list>
+					<!-- <ion-item> -->
+						<ion-label text-wrap><h2>If you have done any courses that might be relevant here, please mention them.</h2></ion-label>
+						<!-- </ion-item>-->
+						<ion-item> 
+						<ion-input type="text" [(ngModel)]="courses" name="courses"></ion-input>
+					</ion-item>
+				</ion-list>
+	
+				<ion-list>
+					<ion-item>
+						<ion-button slot='end' fill='solid' color="primary" [disabled]='!(background && time && (career || social || emotional || self || other))'  (click)='continue()'>Continue</ion-button>
+					</ion-item>
+				</ion-list>	
+				
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-content>

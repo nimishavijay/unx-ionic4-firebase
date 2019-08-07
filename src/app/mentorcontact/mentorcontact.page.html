@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <!-- <ion-title>New Session</ion-title> -->
+    <!-- <ion-buttons slot="start">
+      <ion-button icon-only (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+	<ion-grid style='height: 100%;'>
+	<ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column">
+		<ion-col align-self-center>
+			
+			<ion-list>
+      	<!-- <ion-item text-wrap> -->
+					<ion-label text-wrap><h2>Welcome to UNX! Please provide a few basic details about yourself:</h2> </ion-label>
+      	<!-- </ion-item> -->
+			</ion-list>
+		
+			<ion-list>
+				<ion-item>
+					<ion-label position='floating' text-wrap><h2>Name</h2></ion-label>
+					<!-- </ion-item><ion-item> -->
+					<ion-input type="text" [(ngModel)]="name" name="name" required=true multiple=true></ion-input>
+				</ion-item>
+			</ion-list>
+		
+			<ion-list>
+				<ion-item>
+					<ion-label position='floating' text-wrap><h2>Phone number</h2></ion-label>
+					<!-- </ion-item><ion-item> -->
+					<ion-input type="number" [(ngModel)]="phone" name="phone" required=true></ion-input>
+				</ion-item>
+			</ion-list>
+		
+			<ion-list>
+				<ion-item>
+					<ion-label position='floating' text-wrap><h2>Links to your social media accounts (LinkedIn, Facebook)</h2></ion-label>
+					<!-- </ion-item><ion-item> -->
+					<ion-input type="url" [(ngModel)]="socialmedia" name="socialmedia" required=true></ion-input>
+				</ion-item>
+			</ion-list>
+
+			<ion-list>
+				<ion-item>
+					<ion-button slot='end' fill='solid' color="primary" [disabled]='!(name && phone && socialmedia)' (click)='continue()'>Continue</ion-button>
+				</ion-item>
+			</ion-list>	
+		</ion-col>
+	</ion-row>
+	</ion-grid>
+</ion-content>
