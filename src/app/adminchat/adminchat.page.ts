@@ -14,7 +14,7 @@ export class AdminchatPage implements OnInit {
 
 	chatId: string;
   
-	currentUser = {
+	mentee = {
 		key: '',
 		name: ''
 	};
@@ -23,12 +23,16 @@ export class AdminchatPage implements OnInit {
 		key:'',
 		name: ''
 	};
+
+	user1: any;
+	user2: any;
 	
   chatMessage: string;
   messages = [];
   offStatus = false;
 
   @ViewChild(Content) content: Content;
+	@ViewChild("inputElement") inputElement: any;
 
   constructor (
     public router: Router,
@@ -69,9 +73,18 @@ export class AdminchatPage implements OnInit {
 					console.log('--- CHAT PAGE ---');
 					firebase.database().ref('adminchats/' + this.chatId).once('value', snapshot => {
 						this.admin.key = snapshot.child('adminId').val();
-						this.currentUser.name = snapshot.child('menteeName').val();
-						this.currentUser.key = snapshot.child('menteeId').val();
+						this.admin.name = "Admin"
+						this.mentee.name = snapshot.child('menteeName').val();
+						this.mentee.key = snapshot.child('menteeId').val();
 					})
+					if (firebase.auth().currentUser.email.indexOf("unx.life") !== -1) {
+						this.user1 = this.admin;
+						this.user2 = this.mentee;
+					}
+					else {
+						this.user1 = this.mentee;
+						this.user2 = this.admin;
+					} 
 				
 				}	else {
     	    this.router.navigate(['/signin']);
@@ -121,19 +134,22 @@ export class AdminchatPage implements OnInit {
 		if (this.chatMessage.trim() !== "") {
 	  	const newData = firebase.database().ref('adminchats/' + this.chatId + '/messages/').push();
 	  	newData.set({
-	  	  senderId: this.currentUser.key,
-	  	  receiverId: this.admin.key,
+	  	  senderId: this.user1.key,
+	  	  receiverId: this.user2.key,
 				content: content,
 	  	  date: Date()
 			})
 			this.messages.push({
-				senderId: this.currentUser.key,
-	  	  receiverId: this.admin.key,
+				senderId: this.user1.key,
+	  	  receiverId: this.user2.key,
 				content: content,
 	  	  date: Date()
 			})
 		this.chatMessage = "";
   	this.scroll();
+		/* setTimeout(() => {
+			this.inputElement.setFocus();
+		}, 1); */
 		// this.content.scrollToBottom();
 		}
 	}	

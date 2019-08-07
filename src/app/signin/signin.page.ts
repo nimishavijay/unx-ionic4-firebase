@@ -33,16 +33,15 @@ export class SigninPage implements OnInit, OnDestroy {
 
   async signIn() {
     try {
-      await firebase.auth().signInWithEmailAndPassword(this.data.email, this.data.password);
-			await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).on('value', snapshot => {
-				snapshot.forEach(data => {
-					firebase.database().ref("users/" + data.key).child("type").once("value", child => {
-						if (child.val() === "admin") this.router.navigate(['/adminhome'])
-						else this.router.navigate(['/menteehome'])
-					});
-				})
-			});	
-        // this.router.navigate(['/type']);
+      await firebase.auth().signInWithEmailAndPassword(this.data.email, this.data.password).then(() => console.log("signed in"));
+			// var activeUser: any;
+			// activeUser.email = firebase.auth().currentUser.email;
+			// activeUser.key = firebase.auth().currentUser.uid;
+			if (firebase.auth().currentUser.email.indexOf("unx.life") !== -1) {
+				this.router.navigate(['/adminhome'])
+			}
+			else this.router.navigate(['/menteehome']);
+				
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',

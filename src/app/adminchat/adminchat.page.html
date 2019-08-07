@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Admin Chat</ion-title>
+    <ion-title>{{user2.name}}</ion-title>
     <ion-buttons slot="start">
       <ion-button icon-only (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -12,8 +12,7 @@
 <ion-content padding>
   <ion-list class="chat-list">
     <ion-item *ngFor="let msg of messages" no-lines>
-			<ion-item slot="end" *ngIf="msg.senderId === currentUser.key;then sentMsgs else receivedMsgs"></ion-item>
-			
+			<ion-item *ngIf="msg.senderId === user1.key;then sentMsgs else receivedMsgs"></ion-item>
 			<ng-template #sentMsgs>
 				<ion-item slot="end">
       		<ion-label text-wrap class="media-body">
@@ -39,7 +38,7 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-input type="text" placeholder="Type a message" autofocus=true [(ngModel)]="chatMessage" name="message"></ion-input>
+    <ion-input #inputElement type="text" placeholder="Type a message" autofocus=true [(ngModel)]="chatMessage" name="message"></ion-input>
     <ion-buttons slot="end">
       <ion-button slot="end" color="primary" (click)="sendMessage(chatMessage)">
         <ion-icon name="send"></ion-icon>

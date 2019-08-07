@@ -16,7 +16,7 @@ export class SignupPage implements OnInit, OnDestroy {
 		email: '',
 		password: '', 
 		confirm: '', 
-		username: ''
+		// username: ''
 	};
 
   constructor(
@@ -30,14 +30,14 @@ export class SignupPage implements OnInit, OnDestroy {
 		this.data.email = '';
 		this.data.password = ''; 
 		this.data.confirm = ''; 
-		this.data.username = '';
+		// this.data.username = '';
   }
 
 	ngOnDestroy() {
 		this.data.email = '';
 		this.data.password = ''; 
 		this.data.confirm = ''; 
-		this.data.username = '';
+		// this.data.username = '';
 	}
 
   async signUp() {
@@ -47,19 +47,19 @@ export class SignupPage implements OnInit, OnDestroy {
 			}
       await firebase.auth().createUserWithEmailAndPassword(this.data.email, this.data.password);
 			var activeUser = firebase.auth().currentUser;
-			await activeUser.updateProfile({
+/* 			await activeUser.updateProfile({
 				displayName: this.data.username,
 				photoURL: null
 			}).then(() => console.log("updated profile: \n", activeUser) )
 				.catch((error) => console.log(error.message))
-
+			 */
 			var type = (activeUser.email.indexOf("unx.life") !== -1) ? "admin": null
 			
 			if (type === "admin") {
 				const newData = firebase.database().ref('admins/').push();
 				await newData.set({
 					email: activeUser.email,
-					username: activeUser.displayName,
+					// username: activeUser.displayName,
 					uid: activeUser.uid,
 					requests: 0
 				});
@@ -69,10 +69,11 @@ export class SignupPage implements OnInit, OnDestroy {
 				const newData = await firebase.database().ref("users/").push({ email: activeUser.email});
 				await newData.set({
 					email: activeUser.email,
-					username: activeUser.displayName,
+					// username: activeUser.displayName,
 					uid: activeUser.uid,
 					mentor: false,
-					mentee: false 
+					mentee: false,
+					currentState: null
 				});
 				this.presentToast("Successfully signed up");
 				this.router.navigate(['/type']);

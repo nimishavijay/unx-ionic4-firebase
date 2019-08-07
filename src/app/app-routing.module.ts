@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'menteehome', pathMatch: 'full' },
+  { path: '', redirectTo: 'mentorassessment', pathMatch: 'full' },
   // { path: 'home', loadChildren: './home/home.module#HomePageModule' },
   { path: 'signin', loadChildren: './signin/signin.module#SigninPageModule' },
   { path: 'menteehome', loadChildren: './menteehome/menteehome.module#MenteehomePageModule' },
@@ -16,6 +16,9 @@ const routes: Routes = [
   { path: 'adminchat', loadChildren: './adminchat/adminchat.module#AdminchatPageModule' },
   { path: 'adminhome', loadChildren: './adminhome/adminhome.module#AdminhomePageModule' },
   { path: 'getname', loadChildren: './getname/getname.module#GetnamePageModule' },
+  { path: 'mentorassessment', loadChildren: './mentorassessment/mentorassessment.module#MentorassessmentPageModule' },
+  { path: 'mentorinfo', loadChildren: './mentorinfo/mentorinfo.module#MentorinfoPageModule' },
+  { path: 'mentorcontact', loadChildren: './mentorcontact/mentorcontact.module#MentorcontactPageModule' },
 ];
 
 @NgModule({

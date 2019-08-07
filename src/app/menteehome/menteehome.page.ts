@@ -13,7 +13,7 @@ import { Key } from 'protractor';
 export class MenteehomePage implements OnInit {
 
   chats = [];
-	currentUser = {
+	currentUser: any = {
 		key: '',
 		name: ''
 	};
@@ -79,6 +79,7 @@ export class MenteehomePage implements OnInit {
 				})
 		}) */
 		this.router.navigate(['/getname']);
+
   }
 
 	settings() {
@@ -94,4 +95,6 @@ export class MenteehomePage implements OnInit {
 			console.log('Sign out error: ' + error.message);
 		}
   }
+
+	
 }

@@ -38,6 +38,11 @@ export class TypePage implements OnInit {
 		firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
 				console.log(firebase.auth().currentUser.uid);
+				firebase.database().ref("users/").orderByChild("uid").equalTo(firebase.auth().currentUser.uid).once("value", snapshot => {
+					snapshot.forEach(data => {
+						this.currentUser.key = data.key;
+					})
+				})
   		} else {
 				this.router.navigate(['/signin']);
 			}
@@ -58,15 +63,12 @@ export class TypePage implements OnInit {
 	}
 
 	async continue() {
-		var thisUser: string;
-		await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).on('value', snapshot => {
-			console.log(snapshot);
-			snapshot.forEach(data => {
-				firebase.database().ref("users/" + data.key + "/currentState").set(this.type);
-				firebase.database().ref("users/" + data.key + "/" + this.type).set(true);
-				thisUser = data.key;
-			})
-			this.router.navigate(['/menteehome']);
-		});		
+		await firebase.database().ref("users/" + this.currentUser.key + "/" + this.type).set(true);
+		await firebase.database().ref("users/" + this.currentUser.key + "/currentState").set(this.type);
+		if (this.type === "mentor") {
+			this.router.navigate(["/mentorinfotabs"]);
+		} else if (this.type === "mentee") {
+			this.router.navigate(["/getname"]);
+		}
 	}
 }
