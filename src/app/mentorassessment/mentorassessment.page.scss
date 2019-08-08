@@ -1,11 +1,32 @@
-.mentor {
-	background: #e5e5e5; 
-	border-left: 5px solid #0f7b7d;
-	padding: 10px
-};
-
 .user {
+	background: #e5e5e5; 
+	border-left: 5px solid #b15975;
+	padding: 10px;
+};
+.userSent {
+	padding: 3px 2px;
+	color: #b15975;
+	font-size: 70%;
+	font-weight: bold;
+	text-transform: uppercase; 
+};
+.mentor {
 	background: #f5f5f5;
-	border-right: 5px solid #b15975;
-	padding: 10px
+	border-right: 5px solid #0f7b7d;
+	padding: 10px;
+};
+.mentorSent {
+	padding: 3px;
+	color: #0f7b7d;
+	font-size: 70%;
+	font-weight: bold;
+	text-align: end;
+	text-transform: uppercase; 
+};
+.response {
+	padding: 5px;
+}
+
+.summary {
+	padding: 5%;
 }
