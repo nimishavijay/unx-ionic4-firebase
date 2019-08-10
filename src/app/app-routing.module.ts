@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'adminhome', pathMatch: 'full' },
+  { path: '', redirectTo: 'mentorhome', pathMatch: 'full' },
   // { path: 'home', loadChildren: './home/home.module#HomePageModule' },
   { path: 'signin', loadChildren: './signin/signin.module#SigninPageModule' },
   { path: 'menteehome', loadChildren: './menteehome/menteehome.module#MenteehomePageModule' },
@@ -19,6 +19,7 @@ const routes: Routes = [
   { path: 'mentorassessment', loadChildren: './mentorassessment/mentorassessment.module#MentorassessmentPageModule' },
   { path: 'mentorinfo', loadChildren: './mentorinfo/mentorinfo.module#MentorinfoPageModule' },
   { path: 'mentorcontact', loadChildren: './mentorcontact/mentorcontact.module#MentorcontactPageModule' },
+  { path: 'mentorhome', loadChildren: './mentorhome/mentorhome.module#MentorhomePageModule' },
 ];
 
 @NgModule({

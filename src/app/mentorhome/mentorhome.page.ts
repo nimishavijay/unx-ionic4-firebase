@@ -1,24 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-//import { NavController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
-import { Key } from 'protractor';
-
 
 @Component({
-  selector: 'app-adminhome',
-  templateUrl: './adminhome.page.html',
-  styleUrls: ['./adminhome.page.scss'],
+  selector: 'app-mentorhome',
+  templateUrl: './mentorhome.page.html',
+  styleUrls: ['./mentorhome.page.scss'],
 })
-export class AdminhomePage implements OnInit {
+export class MentorhomePage implements OnInit {
 
   chats = [];
 	currentUser: any = {
-		key: '',
-		name: ''
+		key: null,
+		name: null
 	};
-
-	isloading = true;
 
   constructor(
 		private router: Router
@@ -28,23 +23,30 @@ export class AdminhomePage implements OnInit {
 		console.log('---EXISTING CHATS---');
 	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			await firebase.database().ref('admins/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
+			await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
 				snapshot.forEach((data) => {
-					this.currentUser.name = data.val().username;
-					this.currentUser.key =  data.key;
-					console.log(this.currentUser.key);
+					if (data.val().mentor === false) {
+						if (data.val().mentee === false) {
+							this.router.navigate(['/type'])
+						} else this.router.navigate(["/getname"])			
+					} else this.currentUser.key = data.key;
 				})
 			})
-			firebase.database().ref('admins/' + this.currentUser.key + "/chats").on('value', snapshot => {
-					console.log(snapshot.val());
+			// console.log("key: ", this.currentUser.key );
+			firebase.database().ref('mentors/' + this.currentUser.key + "/name").once('value', snapshot => {
+				this.currentUser.name =  snapshot.val();
+			});
+			firebase.database().ref('mentors/' + this.currentUser.key + "/chats").on('value', snapshot => {
 					this.chats = [];
 					snapshot.forEach(chat => {
 						console.log(chat.val());
 						const temp = chat.val();
 						temp.key = chat.key;
 						this.chats.push(temp);
-					})
+					}) 
+				// }
 			});
+			
 	    } else {
 	      this.router.navigate(['/signin']);
 	    }

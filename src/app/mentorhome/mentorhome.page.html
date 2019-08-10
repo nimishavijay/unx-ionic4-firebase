@@ -1,0 +1,56 @@
+<ion-menu>
+  <ion-header>
+    <ion-toolbar color='primary'>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+			<ion-menu-toggle>
+        <ion-item>
+          <!-- <ion-icon name='power' slot="end" size='small'></ion-icon> -->
+          <ion-label>
+						{{currentUser?.name}} 
+          </ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+			
+      <ion-menu-toggle>
+        <ion-item>
+          <ion-icon name='power' slot="end" size='small'></ion-icon>
+          <ion-label (click)="signOut()">
+						Sign Out 
+          </ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+			<ion-menu-toggle>
+        <ion-item>
+					<ion-icon name='settings' slot="end" size='small'></ion-icon>
+          <ion-label (click)="settings()">
+            Settings
+          </ion-label>
+        </ion-item>
+      </ion-menu-toggle>  
+    </ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Chats</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content main padding>
+  <ion-list>
+    <ion-item *ngFor="let chat of chats" (click)="goToChat(chat.key)" lines='full'>
+      {{chat.menteeName}}<!--  <small>{{chat.key}}</small> -->
+    </ion-item>
+  </ion-list>
+</ion-content>
