@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>{{user2.name}}</ion-title>
+    <ion-title>{{user2?.name}}</ion-title>
     <ion-buttons slot="start">
       <ion-button icon-only (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -9,8 +9,14 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-list class="chat-list">
+<ion-content *ngIf='isloading === true; else showcontent'>
+	<div class="loader">	
+		<ion-spinner name=bubbles color=primary	></ion-spinner>
+	</div>
+</ion-content>
+<ng-template #showcontent>
+<ion-content no-padding>
+  <!-- <ion-list class="chat-list">
     <ion-item *ngFor="let msg of messages" no-lines>
 			<ion-item *ngIf="msg.senderId === user1.key;then sentMsgs else receivedMsgs"></ion-item>
 			<ng-template #sentMsgs>
@@ -33,7 +39,34 @@
       	</ion-item>
       </ng-template>
     </ion-item>
-  </ion-list>
+  </ion-list> -->
+
+	<ion-item class='content'>
+			<ion-grid no-padding>
+				<div *ngFor="let msg of messages">
+					<div *ngIf="msg.senderId === user1.key;then sentMsgs else receivedMsgs"></div>
+					<ng-template #sentMsgs>
+						<ion-row justify-content-end class='messagebox'>
+							<ion-col class="sent"  size=auto>
+							<div class="sentUser">{{user1.name}}</div>
+								{{msg.content}}
+							</ion-col>
+						</ion-row>
+					</ng-template>
+					<ng-template #receivedMsgs>
+						<ion-row justify-content-start class='messagebox'>
+							<ion-col class="received" size=auto>
+							<div class="receivedUser">{{user2.name}}</div>
+								{{msg.content}}
+							</ion-col>
+						</ion-row>
+					</ng-template>
+				</div>
+			</ion-grid>
+		</ion-item>
+
+
+
 </ion-content>
 
 <ion-footer>
@@ -46,3 +79,4 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
+</ng-template>

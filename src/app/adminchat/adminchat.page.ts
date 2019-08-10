@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Content } from '@ionic/angular';
+import { Content, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { promise } from 'protractor';
@@ -31,12 +31,17 @@ export class AdminchatPage implements OnInit {
   messages = [];
   offStatus = false;
 
+	isloading = true;
+
+	loaderToShow: any;
+
   @ViewChild(Content) content: Content;
 	@ViewChild("inputElement") inputElement: any;
 
   constructor (
-    public router: Router,
-    public route: ActivatedRoute
+    private router: Router,
+    public route: ActivatedRoute,
+		private loadingController: LoadingController
   ) { 
 			this.chatId = this.router.url.split('/').slice(-1)[0]; 
 		} 
@@ -69,23 +74,23 @@ export class AdminchatPage implements OnInit {
 
 	async ngOnInit() {
 		await firebase.auth().onAuthStateChanged((user) => {
-    	  if (user) {
+				if (user) {
 					console.log('--- CHAT PAGE ---');
 					firebase.database().ref('adminchats/' + this.chatId).once('value', snapshot => {
 						this.admin.key = snapshot.child('adminId').val();
 						this.admin.name = "Admin"
 						this.mentee.name = snapshot.child('menteeName').val();
 						this.mentee.key = snapshot.child('menteeId').val();
-					})
-					if (firebase.auth().currentUser.email.indexOf("unx.life") !== -1) {
-						this.user1 = this.admin;
-						this.user2 = this.mentee;
-					}
-					else {
-						this.user1 = this.mentee;
-						this.user2 = this.admin;
-					} 
-				
+					}).then(() => {
+						if (firebase.auth().currentUser.email.indexOf("unx.life") !== -1) {
+							this.user1 = this.admin;
+							this.user2 = this.mentee;
+						}
+						else {
+							this.user1 = this.mentee;
+							this.user2 = this.admin;
+						}
+					}).then(() => this.isloading = false);
 				}	else {
     	    this.router.navigate(['/signin']);
 				}
@@ -153,4 +158,26 @@ export class AdminchatPage implements OnInit {
 		// this.content.scrollToBottom();
 		}
 	}	
+
+
+	showLoader() {
+    this.loaderToShow = this.loadingController.create({
+      message: 'This Loader will Not AutoHide'
+    }).then((res) => {
+      res.present();
+ 
+      res.onDidDismiss().then((dis) => {
+        console.log('Loading dismissed!');
+      });
+    });
+    this.hideLoader();
+  }
+ 
+  hideLoader() {
+    setTimeout(() => {
+      this.loadingController.dismiss();
+    }, 4000);
+  }
+
+
 }
