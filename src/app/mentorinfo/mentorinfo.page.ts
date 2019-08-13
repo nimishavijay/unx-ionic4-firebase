@@ -47,18 +47,26 @@ export class MentorinfoPage implements OnInit {
   }
 
 	async continue() {
-		var area = [];
-		if (this.career === true) area.push("career");
-		if (this.social === true) area.push("social");
-		if (this.emotional === true) area.push("emotional");
-		if (this.self === true) area.push("self");
-		if (this.isOtherChecked === true) area.push(this.other);
+		var areas = [];
+		if (this.career === true) areas.push("career");
+		if (this.social === true) areas.push("social");
+		if (this.emotional === true) areas.push("emotional");
+		if (this.self === true) areas.push("self");
+		if (this.isOtherChecked === true) areas.push(this.other);
 		await firebase.database().ref("mentors/" + this.currentUser).update({
 			background: this.background,
 			time: this.time,
-			area: area,
+			area: areas,
 			courses: this.courses
 		}).then(() => console.log("mentor contact updated"))
+
+		for (let area of areas) {
+			firebase.database().ref("areas/" + area).update({
+				[this.currentUser]: {
+					requests: 0
+				}
+			})
+		}
 
 		this.router.navigate(['/mentorassessment']);
 	}

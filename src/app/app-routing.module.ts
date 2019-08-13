@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'mentorhome', pathMatch: 'full' },
+  { path: '', redirectTo: 'getname', pathMatch: 'full' },
   // { path: 'home', loadChildren: './home/home.module#HomePageModule' },
   { path: 'signin', loadChildren: './signin/signin.module#SigninPageModule' },
   { path: 'menteehome', loadChildren: './menteehome/menteehome.module#MenteehomePageModule' },

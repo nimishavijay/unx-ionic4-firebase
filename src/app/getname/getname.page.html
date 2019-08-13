@@ -9,30 +9,38 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-	<ion-grid style='height: 100%;'>
-	<ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column">
-		<ion-col align-self-center>
-    
-		  <ion-row justify-content-center>
-      	<ion-item text-wrap>
-					<ion-label text-wrap>What would you like to be called for this session?</ion-label>
-      	</ion-item>
-			</ion-row>
-		
-			<ion-row justify-content-center>
-				<ion-item>
-					<ion-input type="text" placeholder='Nickname' [(ngModel)]="name" name="name" required></ion-input>
+<ion-content no-padding >
+	<div style="justify-content: center; padding: 10% 10% 0% 10%; ">
+		<div>
+			<ion-text text-wrap>What would you like to be called for this session?</ion-text>
+			<ion-item style="padding-top: 5%">
+				<ion-input type="text" placeholder='Nickname' [(ngModel)]="name" name="name" required></ion-input>
+			</ion-item>
+		</div>
+	</div>
+
+	<div style="padding: 10% 10% 0% 10%; justify-content: center">
+		<ion-text text-wrap>What would you like help with?</ion-text>
+	</div>
+
+	<div style="padding: 0% 5% 5% 5%">
+		<ion-radio-group>
+			<ion-list>
+				<ion-item *ngFor="let area of areas" style="margin-bottom: -8%" (click)="select(area.name)">
+					<ion-radio slot=start></ion-radio>
+					<ion-label>{{area.name}}</ion-label>
+					<ion-icon name={{area.icon}} style="margin: 10%"></ion-icon>
 				</ion-item>
-			</ion-row>
-		
-			<ion-row style="height: 5%"></ion-row>
-		
-			<ion-row justify-content-center>
-				<ion-button color="primary" type="button" [disabled]="!name" (click)="adminChat()">Continue</ion-button>
-			</ion-row>
-		
-		</ion-col>
-	</ion-row>
-	</ion-grid>
+			</ion-list>
+		</ion-radio-group>
+	</div>
+
 </ion-content>
+
+<ion-footer>
+	<ion-toolbar>
+		<ion-buttons slot=end>
+			<ion-button color="primary" type="button" [disabled]="!(name && area)" (click)="continue()">Continue</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-footer>

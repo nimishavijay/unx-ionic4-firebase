@@ -40,7 +40,7 @@ export class SigninPage implements OnInit, OnDestroy {
 			if (firebase.auth().currentUser.email.indexOf("unx.life") !== -1) {
 				this.router.navigate(['/adminhome'])
 			}
-			else this.router.navigate(['/mentorhome']);
+			else this.router.navigate(['/getname']);
 				
     } catch (error) {
       const alert = await this.alertController.create({

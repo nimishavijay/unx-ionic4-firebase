@@ -15,7 +15,36 @@ export class GetnamePage implements OnInit {
 		name: ''
 	};
 
-	name: string;
+	areas: any = [
+		{
+			name: "Career",
+			icon: "briefcase"
+		},
+		{
+			name: "Social",
+			icon: "contacts"
+		},
+		{
+			name: "Emotional",
+			icon: "happy"
+		},
+		{
+			name: "Self Development",
+			icon: "flower"
+		},
+		{
+			name: "Relationships",
+			icon: "heart"
+		},
+		{
+			name: "I'm not sure",
+			icon: "help"
+		},
+	]
+
+	area: string = null;
+
+	name: string = null;
 
   constructor(
 		private router: Router
@@ -40,6 +69,10 @@ export class GetnamePage implements OnInit {
     this.router.navigate(['/menteehome']);
   }
 
+	select(arg: string) {
+		this.area = arg;
+	}
+
 	async adminChat() {
 		var adminId: string;
 		await firebase.database().ref('admins/').orderByChild("requests").limitToFirst(1).once("value", snapshot => {
@@ -52,31 +85,82 @@ export class GetnamePage implements OnInit {
 		})
 		console.log("mentee: ", this.currentUser.key, "nickname: ", this.name);
 
-		const newData = firebase.database().ref("adminchats/").push();
+		const newData = firebase.database().ref("chats/").push();
 		await newData.set({
 			adminId: adminId,
 			menteeId: this.currentUser.key,
-			menteeName: this.name
+			menteeName: this.name,
+			// type: "admin",
+			dateCreated: Date()
 		}).then(() => {
-			const helloMessage = newData.child("messages").push();
+			const helloMessage = newData.child("adminmessages").push();
 			helloMessage.set({
 				senderId: adminId,
 	  	  receiverId: this.currentUser.key,
-				content: "Hi, " + this.name + "! Welcome to UNX. Something something how can I help?",
+				content: "Hi, " + this.name + "! Welcome to UNX. I'm here to help you through your problems. What's been bothering you?",
 	  	  date: Date()
 			})
-			console.log("pushed to adminschats/")
+			console.log("pushed to chats/")
 		})
 		firebase.database().ref("mentees/" + this.currentUser.key + "/chats/" + newData.key).set({
 			adminId: adminId,
 			menteeName: this.name,
 			type: "admin"
-		}).then(() => console.log("pushed to mentees/key/adminchats/"))
+		}).then(() => console.log("pushed to mentees/key/chats/"))
 		firebase.database().ref("admins/" + adminId + "/chats/" + newData.key).set({
 			menteeId: this.currentUser.key,
 			menteeName: this.name
 		}).then(() => console.log("pushed to admin/key/chats/"))
 		this.router.navigate(['/adminchat/'+ newData.key]);
+	}
+
+	async mentorChat(area: string) {
+		var mentorId: string;
+
+		/* FILTER MENTORS BY AREA. CHANGE DATABASE  */
+
+		await firebase.database().ref("areas/" + area).orderByChild("requests").limitToFirst(1).once("value", snapshot => {
+			snapshot.forEach(data => {
+				data.child("requests").ref.transaction(currentreq => {
+					mentorId = data.key;
+					return currentreq + 1
+				})
+			})
+		})
+
+/* await firebase.database().ref('mentors/').orderByChild("area").orderByValue().equalTo(area).limitToFirst(1).once("value", snapshot => {
+			snapshot.forEach(data => {
+				data.child("requests").ref.transaction((currentrequests) => { 
+					mentorId = data.key;
+					return currentrequests + 1 
+				}).then(() => console.log("mentorId: ", mentorId))
+			})
+		}) */
+		
+		const newData = firebase.database().ref("chats/").push();
+		await newData.set({
+			mentorId: mentorId,
+			menteeId: this.currentUser.key,
+			menteeName: this.name,
+			// type: "admin",
+			dateCreated: Date()
+		})
+		firebase.database().ref("mentees/" + this.currentUser.key + "/chats/" + newData.key).set({
+			mentorId: mentorId,
+			menteeName: this.name,
+			type: "mentor"
+		}).then(() => console.log("pushed to mentees/key/chats/"))
+		firebase.database().ref("mentors/" + mentorId + "/chats/" + newData.key).set({
+			menteeId: this.currentUser.key,
+			menteeName: this.name
+		}).then(() => console.log("pushed to mentors/key/chats/"))
+	}
+
+	async continue() {
+		if (this.area === "I'm not sure") {
+			await this.adminChat();
+		} 
+		else await this.mentorChat(this.area);
 	}
 
 }

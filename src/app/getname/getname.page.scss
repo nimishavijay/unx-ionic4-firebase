@@ -1,0 +1,28 @@
+.areas {
+	display: flex;
+	// padding: 5%;
+	// flex-direction: column;
+	justify-content: space-between;
+	align-content: center;
+	word-wrap: normal;
+};
+.each {
+	// background: cyan;
+	margin: 5%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+};
+.icon {
+	// background: magenta;
+	// height: 100%;
+	color: #0f7b7d;
+	text-align: center;
+};
+.label {
+	// background: blue;
+	font-size: 100%;
+	text-transform: uppercase; 
+	text-align: center;
+	word-wrap: normal;
+}
