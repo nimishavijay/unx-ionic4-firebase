@@ -6,6 +6,10 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
+		<ion-buttons *ngIf="currentUserState === 'admin'" slot=end>
+      <ion-button (click)="findAMentor()">Find a mentor
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

@@ -54,13 +54,7 @@ export class GetnamePage implements OnInit {
 		firebase.auth().onAuthStateChanged((user) => {
     	if (user) {
 				console.log('---GET NAME---');
-    	  firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
-					snapshot.forEach((data) => {
-						this.currentUser.name = data.val().username;
-						this.currentUser.key =  data.key;
-						console.log('currentUser: ', this.currentUser);
-					})
-				})
+    	  this.currentUser.key = firebase.auth().currentUser.uid;
 			} else this.router.navigate(['/signin']);
 		})
   }
@@ -70,7 +64,8 @@ export class GetnamePage implements OnInit {
   }
 
 	select(arg: string) {
-		this.area = arg;
+		if (arg === "I'm not sure") this.area = "other";
+		else this.area = arg.split(" ")[0].toLowerCase();
 	}
 
 	async adminChat() {
@@ -90,7 +85,7 @@ export class GetnamePage implements OnInit {
 			adminId: adminId,
 			menteeId: this.currentUser.key,
 			menteeName: this.name,
-			// type: "admin",
+			type: "admin",
 			dateCreated: Date()
 		}).then(() => {
 			const helloMessage = newData.child("adminmessages").push();
@@ -111,42 +106,41 @@ export class GetnamePage implements OnInit {
 			menteeId: this.currentUser.key,
 			menteeName: this.name
 		}).then(() => console.log("pushed to admin/key/chats/"))
+		
 		this.router.navigate(['/adminchat/'+ newData.key]);
 	}
 
 	async mentorChat(area: string) {
 		var mentorId: string;
+		var mentorName: string;
 
-		/* FILTER MENTORS BY AREA. CHANGE DATABASE  */
+		console.log(area);
 
 		await firebase.database().ref("areas/" + area).orderByChild("requests").limitToFirst(1).once("value", snapshot => {
 			snapshot.forEach(data => {
-				data.child("requests").ref.transaction(currentreq => {
+				console.log(data)
+				data.child("requests").ref.transaction((currentreq) => {
 					mentorId = data.key;
 					return currentreq + 1
-				})
+				}).then(() => console.log("mentorId: ", mentorId))
 			})
 		})
 
-/* await firebase.database().ref('mentors/').orderByChild("area").orderByValue().equalTo(area).limitToFirst(1).once("value", snapshot => {
-			snapshot.forEach(data => {
-				data.child("requests").ref.transaction((currentrequests) => { 
-					mentorId = data.key;
-					return currentrequests + 1 
-				}).then(() => console.log("mentorId: ", mentorId))
-			})
-		}) */
-		
-		const newData = firebase.database().ref("chats/").push();
-		await newData.set({
+		await firebase.database().ref("mentors/" + mentorId + "/name").once("value", snapshot => {
+			mentorName = snapshot.val();
+		}).then(() => console.log("Mentor: ", mentorName));
+		 
+		const newData = firebase.database().ref("chats/").push({
 			mentorId: mentorId,
+			mentorName: mentorName,
 			menteeId: this.currentUser.key,
 			menteeName: this.name,
-			// type: "admin",
+			type: "mentor",
 			dateCreated: Date()
 		})
 		firebase.database().ref("mentees/" + this.currentUser.key + "/chats/" + newData.key).set({
 			mentorId: mentorId,
+			mentorName: mentorName,
 			menteeName: this.name,
 			type: "mentor"
 		}).then(() => console.log("pushed to mentees/key/chats/"))
@@ -154,10 +148,12 @@ export class GetnamePage implements OnInit {
 			menteeId: this.currentUser.key,
 			menteeName: this.name
 		}).then(() => console.log("pushed to mentors/key/chats/"))
+
+		this.router.navigate(["/adminchat/" + newData.key]) 
 	}
 
 	async continue() {
-		if (this.area === "I'm not sure") {
+		if (this.area === "other") {
 			await this.adminChat();
 		} 
 		else await this.mentorChat(this.area);

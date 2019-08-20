@@ -134,7 +134,7 @@ export class MentorassessmentPage implements OnInit {
 	ngOnInit() {
 		firebase.auth().onAuthStateChanged((user) => {
 			if (user) {
-				firebase.database().ref("/users").orderByChild("uid").equalTo(firebase.auth().currentUser.uid).once("value", (snapshot) => {
+				/* firebase.database().ref("/users" + firebase.auth().currentUser.uid).once("value", (snapshot) => {
 					snapshot.forEach(data => {
 						if (data.val().mentor === false) {
 							if (data.val().mentee === false) {
@@ -142,7 +142,7 @@ export class MentorassessmentPage implements OnInit {
 							} else this.router.navigate(["/getname"])			
 						} else this.currentUser = data.key
 					})
-				})
+				}) */ this.currentUser = firebase.auth().currentUser.uid;
 			} else this.router.navigate(["/signin"])
 		})
   }
@@ -178,7 +178,7 @@ export class MentorassessmentPage implements OnInit {
 				mentoring: this.response4.mentoring
 			}
 		});
-		// this.router.navigate(['/mentorhome']);
+		this.router.navigate(['/mentorhome']);
 	}
 
 }

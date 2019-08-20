@@ -23,28 +23,19 @@ export class MentorhomePage implements OnInit {
 		console.log('---EXISTING CHATS---');
 	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
-				snapshot.forEach((data) => {
-					if (data.val().mentor === false) {
-						if (data.val().mentee === false) {
-							this.router.navigate(['/type'])
-						} else this.router.navigate(["/getname"])			
-					} else this.currentUser.key = data.key;
-				})
-			})
-			// console.log("key: ", this.currentUser.key );
-			firebase.database().ref('mentors/' + this.currentUser.key + "/name").once('value', snapshot => {
+				this.currentUser.key = firebase.auth().currentUser.uid;
+				console.log("key: ", this.currentUser.key );
+				firebase.database().ref('mentors/' + this.currentUser.key + "/name").once('value', snapshot => {
 				this.currentUser.name =  snapshot.val();
 			});
 			firebase.database().ref('mentors/' + this.currentUser.key + "/chats").on('value', snapshot => {
-					this.chats = [];
-					snapshot.forEach(chat => {
-						console.log(chat.val());
-						const temp = chat.val();
-						temp.key = chat.key;
-						this.chats.push(temp);
-					}) 
-				// }
+				this.chats = [];
+				snapshot.forEach(chat => {
+					console.log(chat.val());
+					const temp = chat.val();
+					temp.key = chat.key;
+					this.chats.push(temp);
+				}) 
 			});
 			
 	    } else {

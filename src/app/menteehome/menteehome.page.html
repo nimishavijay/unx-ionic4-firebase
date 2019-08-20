@@ -41,7 +41,7 @@
 <ion-content main padding>
   <ion-list>
     <ion-item *ngFor="let chat of chats" (click)="goToChat(chat.key)" lines='full'>
-      {{chat.key}}<!--  <small>{{chat.key}}</small> -->
+      {{chat.type === "admin" ? "Admin" : chat.mentorName}}<!--  <small>{{chat.key}}</small> -->
     </ion-item>
   </ion-list>
 	<ion-fab vertical='bottom' horizontal='end' (click)='newChat()'>

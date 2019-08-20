@@ -26,7 +26,7 @@ export class MenteehomePage implements OnInit {
 		console.log('---EXISTING CHATS---');
 	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
+			await firebase.database().ref('users/' + firebase.auth().currentUser.uid).once('value', snapshot => {
 				snapshot.forEach((data) => {
 					this.currentUser.name = data.val().username;
 					this.currentUser.key =  data.key;
@@ -44,20 +44,7 @@ export class MenteehomePage implements OnInit {
 						this.chats.push(temp);
 					}) 
 				// }
-			});
-			//	console.log(activeUser);
-	    /*  firebase.database().ref('user/').on('value', resp => {
-	        if (resp) {
-	          this.chats = [];
-	          resp.forEach(childSnapshot => {
-	            const chat = childSnapshot.val();
-	            chat.key = childSnapshot.key;
-	            this.chats.push(chat);
-	          })
-					} else {
-						console.log("error");
-					}
-	      }); */
+				});
 	    } else {
 	      this.router.navigate(['/signin']);
 	    }

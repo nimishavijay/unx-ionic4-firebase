@@ -37,12 +37,8 @@ export class TypePage implements OnInit {
   ngOnInit() {
 		firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-				console.log(firebase.auth().currentUser.uid);
-				firebase.database().ref("users/").orderByChild("uid").equalTo(firebase.auth().currentUser.uid).once("value", snapshot => {
-					snapshot.forEach(data => {
-						this.currentUser.key = data.key;
-					})
-				})
+				this.currentUser.key = firebase.auth().currentUser.uid;
+				console.log("currentUser: ", this.currentUser.key);
   		} else {
 				this.router.navigate(['/signin']);
 			}
@@ -66,7 +62,7 @@ export class TypePage implements OnInit {
 		await firebase.database().ref("users/" + this.currentUser.key + "/" + this.type).set(true);
 		await firebase.database().ref("users/" + this.currentUser.key + "/currentState").set(this.type);
 		if (this.type === "mentor") {
-			this.router.navigate(["/mentorinfotabs"]);
+			this.router.navigate(["/mentorcontact"]);
 		} else if (this.type === "mentee") {
 			this.router.navigate(["/getname"]);
 		}

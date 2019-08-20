@@ -13,10 +13,7 @@ import { Key } from 'protractor';
 export class AdminhomePage implements OnInit {
 
   chats = [];
-	currentUser: any = {
-		key: '',
-		name: ''
-	};
+	currentUser: any;
 
 	isloading = true;
 
@@ -28,14 +25,11 @@ export class AdminhomePage implements OnInit {
 		console.log('---EXISTING CHATS---');
 	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			await firebase.database().ref('admins/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
-				snapshot.forEach((data) => {
-					this.currentUser.name = data.val().username;
-					this.currentUser.key =  data.key;
-					console.log(this.currentUser.key);
+				await firebase.database().ref("users/" + firebase.auth().currentUser.uid).once("value", snapshot => {
+					if (snapshot.val()) this.signOut();
 				})
-			})
-			firebase.database().ref('admins/' + this.currentUser.key + "/chats").on('value', snapshot => {
+				this.currentUser = firebase.auth().currentUser.uid;
+				firebase.database().ref('admins/' + this.currentUser + "/chats").on('value', snapshot => {
 					console.log(snapshot.val());
 					this.chats = [];
 					snapshot.forEach(chat => {

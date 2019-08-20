@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-//import { NavController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import * as firebase from 'firebase';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 
@@ -21,16 +22,18 @@ export class SettingsPage implements OnInit {
 	};
 
   constructor(
-		private router: Router
+		private router: Router,
+		private location: Location,
+		public toastController: ToastController
 	) {	 }
 
   ngOnInit() {
 		console.log("---SETTINGS---");
 		firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			await firebase.database().ref('users/').orderByChild('uid').equalTo(firebase.auth().currentUser.uid).once('value', snapshot => {
+			await firebase.database().ref('users/' + firebase.auth().currentUser.uid).once('value', snapshot => {
 				snapshot.forEach((data) => {
-					this.currentUser.name = data.val().username;
+					// this.currentUser.name = data.val().username;
 					this.currentUser.key =  data.key;
 					this.type = data.val().currentState;
 					console.log("Current user: ", this.currentUser.key);
@@ -44,14 +47,17 @@ export class SettingsPage implements OnInit {
 	}
 
 	setType(type: string) {
-		firebase.database().ref('users/' + this.currentUser.key).child('currentState').set(type)
+		firebase.database().ref('users/' + this.currentUser.key + '/' +  type).set(true);
+		firebase.database().ref('users/' + this.currentUser.key + '/currentState').set(type)
 		.then(() => {
 			console.log("set current user type to: ", type);
 		})
 	}
 
 	goBack() {
-		this.router.navigate(['/menteehome']);
+		this.presentToast("Your changes have been saved");
+		this.location.back();
+		// this.router.navigate(['/menteehome']);
 	}
 	
 	goToMentorSettings() {
@@ -79,5 +85,12 @@ export class SettingsPage implements OnInit {
 		// this.router.navigate(['/help']);
 	}
 
+	private async presentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 1500
+    });
+    toast.present();
+  }
 
 }

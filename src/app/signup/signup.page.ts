@@ -26,7 +26,8 @@ export class SignupPage implements OnInit, OnDestroy {
 		public toastController: ToastController
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+		await firebase.auth().signOut();
 		this.data.email = '';
 		this.data.password = ''; 
 		this.data.confirm = ''; 
@@ -47,34 +48,24 @@ export class SignupPage implements OnInit, OnDestroy {
 			}
       await firebase.auth().createUserWithEmailAndPassword(this.data.email, this.data.password);
 			var activeUser = firebase.auth().currentUser;
-/* 			await activeUser.updateProfile({
-				displayName: this.data.username,
-				photoURL: null
-			}).then(() => console.log("updated profile: \n", activeUser) )
-				.catch((error) => console.log(error.message))
-			 */
 			var type = (activeUser.email.indexOf("unx.life") !== -1) ? "admin": null
 			
 			if (type === "admin") {
-				const newData = firebase.database().ref('admins/').push();
-				await newData.set({
+				await firebase.database().ref("admins/" + activeUser.uid).set({
 					email: activeUser.email,
 					// username: activeUser.displayName,
-					uid: activeUser.uid,
+					// uid: activeUser.uid,
 					requests: 0
-				});
+				}).then(() => console.log("admin signed up: ", activeUser.uid));
 				this.router.navigate(['/adminhome']);
 			}
 			else {
-				const newData = await firebase.database().ref("users/").push({ email: activeUser.email});
-				await newData.set({
+				await firebase.database().ref("users/" + activeUser.uid).set({ 
 					email: activeUser.email,
-					// username: activeUser.displayName,
-					uid: activeUser.uid,
 					mentor: false,
 					mentee: false,
-					currentState: null
-				});
+					currentState: 0
+				}).then(() => console.log("user signed up: ", activeUser.uid));
 				this.presentToast("Successfully signed up");
 				this.router.navigate(['/type']);
 			}
