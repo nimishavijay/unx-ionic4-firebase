@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Content, LoadingController } from '@ionic/angular';
+import { Content, LoadingController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { ModalPage } from "../modal/modal.page";
 import * as firebase from 'firebase';
 import { promise } from 'protractor';
 
@@ -37,6 +38,8 @@ export class AdminchatPage implements OnInit {
 
 	user1: any;
 	user2: any;
+
+	viewMentor: boolean = false;
 	
   chatMessage: string;
   messages = [];
@@ -53,36 +56,11 @@ export class AdminchatPage implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
 		private loadingController: LoadingController,
+		public modalController: ModalController,
 		private location: Location
   ) { 
 			this.chatId = this.router.url.split('/').slice(-1)[0]; 
 		} 
-	/* 
-			firebase.auth().onAuthStateChanged((user) => {
-    	  if (user) {
-					console.log('--- CHAT PAGE ---');
-					this.chatId = this.router.url.split('/').slice(-1)[0]; 
-					console.log('chatId: ' + this.chatId);
-					firebase.database().ref('adminchats/' + this.chatId).once('value', snapshot => {
-						this.admin.key = snapshot.child('adminId').val();
-						this.currentUser.name = snapshot.child('menteeName').val();
-						this.currentUser.key = snapshot.child('menteeId').val();
-					}).then(() => {
-							this.ngOnInit()
-						})
-				
-				}	else {
-    	    this.router.navigate(['/signin']);
-				}
-			}) 
-		}
- 
- 	async ngOnInit() {
-		await this.displayChatMessage();
-		this.scroll();
-	}
-
-	*/
 
 	async ngOnInit() {
 		await firebase.auth().onAuthStateChanged(async (user) => {
@@ -188,22 +166,41 @@ export class AdminchatPage implements OnInit {
 			})
 		this.chatMessage = "";
   	this.scroll();
-		/* setTimeout(() => {
-			this.inputElement.setFocus();
-		}, 1); */
-		// this.content.scrollToBottom();
 		}
 	}	
 
 	findAMentor() {
 		/*  
-			CREATE MODAL WITH DIFFERENT AREAS. ADMIN WILL SELECT AN AREA.
-			QUERY THE MENTOR UNDER THAT AREA WITH THE LEAST NUMBER OF REQUESTS.
-			=> A MODAL WILL APPEAR ON MENTEE'S SCREEN SAYING DO YOU WANNA CONTINUE?
+			ADMIN -> CREATE MODAL WITH DIFFERENT AREAS. ADMIN WILL SELECT AN AREA.
+							QUERY THE MENTOR UNDER THAT AREA WITH THE LEAST NUMBER OF REQUESTS.
+							CHANGE CHATS/CHAT_ID/TYPE TO MENTOR
+			
+			=> MENTEE -> A MODAL WILL APPEAR ON MENTEE'S SCREEN SAYING YOU HAVE BEEN CONNECTED TO SO AND SO DO YOU WANNA CONTINUE?
 			YES -> PUSH MENTOR DETAILS TO CHATS/CHAT_ID AND MENTEES/MENTEE_ID AND MENTORS/MENTOR_ID
-				AND REFRESH PAGE AND SHOW MENTOR CHATS
-			NO -> CONTINUE ADMIN CHAT  
+				MENTEES -> DISMISS MODAL, REFRESH PAGE AND SHOW MENTOR CHATS
+				ADMIN -> DISMISS MODAL, CONNECTED MENTEE_NAME TO MENTOR_NAME 
+			NO -> CHANGE CHATS/CHAT_ID/TYPE TO ADMIN 
+				MENTEES ->  DISMISS MODAL, CONTINUE CHAT
+				ADMIN -> DISMIS MODAL, CONTINUE CHAT
 		*/
+
+		this.openModal()
+
+
+	}
+
+	public async openModal() {
+		const modal = await this.modalController.create({
+	    component: ModalPage,
+	    componentProps: {}
+		});
+		return await modal.present();	
+	}
+
+	viewMentorDetails() {
+		if (this.currentUserState === "mentee") {
+			this.viewMentor = true;
+		}
 	}
 
 

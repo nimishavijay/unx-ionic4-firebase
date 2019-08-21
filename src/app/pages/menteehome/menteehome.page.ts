@@ -13,10 +13,7 @@ import { Key } from 'protractor';
 export class MenteehomePage implements OnInit {
 
   chats = [];
-	currentUser: any = {
-		key: '',
-		name: ''
-	};
+	currentUser: any;
 
   constructor(
 		private router: Router
@@ -26,14 +23,8 @@ export class MenteehomePage implements OnInit {
 		console.log('---EXISTING CHATS---');
 	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			await firebase.database().ref('users/' + firebase.auth().currentUser.uid).once('value', snapshot => {
-				snapshot.forEach((data) => {
-					this.currentUser.name = data.val().username;
-					this.currentUser.key =  data.key;
-					console.log(this.currentUser.key);
-				})
-			})
-			firebase.database().ref('mentees/' + this.currentUser.key + '/chats/').on('value', snapshot => {
+			this.currentUser = firebase.auth().currentUser.uid;
+			firebase.database().ref('mentees/' + this.currentUser + '/chats/').on('value', snapshot => {
 				console.log(snapshot);
 				// if (snapshot) {
 					this.chats = [];

@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Find a Mentor</ion-title>
+    <ion-buttons slot="start">
+      <ion-button icon-only (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+		<ion-buttons slot=end>
+      <ion-button (click)="submit()">Submit
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+	<div style="padding: 0% 5% 5% 5%">
+		<ion-radio-group>
+			<ion-list>
+				<ion-item *ngFor="let area of areas" style="margin-bottom: -8%" (click)="select(area.name)">
+					<ion-radio slot=start></ion-radio>
+					<ion-label>{{area.name}}</ion-label>
+					<ion-icon name={{area.icon}} style="margin: 10%"></ion-icon>
+				</ion-item>
+			</ion-list>
+		</ion-radio-group>
+	</div>
+
+</ion-content>

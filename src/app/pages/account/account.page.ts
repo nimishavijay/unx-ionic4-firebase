@@ -53,7 +53,8 @@ export class AccountPage implements OnInit, OnDestroy {
 	}
 
 	goBack() {
-		this.router.navigate(['/settings']);
+		this.location.back();
+		// this.router.navigate(['/settings']);
 	}
 
 	async save() {
