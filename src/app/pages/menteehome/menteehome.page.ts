@@ -43,6 +43,7 @@ export class MenteehomePage implements OnInit {
 	}
 
   goToChat(chatKey: string) {
+		console.log("gotochat");
 		this.router.navigate(['/adminchat/' + chatKey]);
 	}
 

@@ -11,6 +11,11 @@ import * as firebase from "firebase";
 export class ModalPage implements OnInit {
 
 	chatId: string;
+	currentUser: string;
+
+	menteeId: string;
+	menteeName: string;
+
 	area: string;
 	areas: any = [
 		{
@@ -40,9 +45,18 @@ export class ModalPage implements OnInit {
 		private router: Router
 	) {
 			this.chatId = this.router.url.split('/').slice(-1)[0]; 
-	 }
+	}
 
   ngOnInit() {
+		firebase.auth().onAuthStateChanged((user) => {
+			if (user) {
+				this.currentUser = firebase.auth().currentUser.uid;
+				firebase.database().ref("chats/" + this.chatId).once("value", snapshot => {
+					this.menteeId = snapshot.child("menteeId").val();
+					this.menteeName = snapshot.child("menteeName").val();
+				})
+			} else this.router.navigate(["/signout"])
+		})
   }
 
 	select(arg: string) {
@@ -70,9 +84,19 @@ export class ModalPage implements OnInit {
 		await firebase.database().ref("chats/" + this.chatId).update({
 			mentorId: mentorId,
 			mentorName: mentorName,
-			type: "mentor",
-			dateAdded: Date()
+			type: "mentor"
 		}).then(() => console.log("added mentor"));
+
+		/* firebase.database().ref("mentees/" + this.menteeId + "/chats/" + this.chatId).update({
+			mentorId: mentorId,
+			mentorName: mentorName,
+			type: "mentor",
+		})
+
+		firebase.database().ref("mentors/" + mentorId + "/chats/" + this.chatId).update({
+			menteeId: this.menteeId,
+			menteeName: this.menteeName,
+		}) */
 
 		this.closeModal();
 	}

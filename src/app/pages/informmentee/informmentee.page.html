@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button icon-only (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding> 
+	<h2>You have been connected to {{mentorName}}</h2>
+	<h3>Background: </h3>
+			{{mentorBg}}
+	<h3>Rating: </h3>
+			star star star star star (number of ratings)
+</ion-content>
+
+<ion-footer>
+	<ion-toolbar>
+		<ion-buttons slot=end>
+			<ion-button color="primary" type="button" (click)="mentorChat()">Mentor</ion-button>
+		</ion-buttons>
+		<ion-buttons slot=start>
+			<ion-button color="primary" type="button" (click)="adminChat()">Admin</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-footer>

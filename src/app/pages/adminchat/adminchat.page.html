@@ -6,8 +6,12 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-		<ion-buttons *ngIf="currentUserState === 'admin'" slot=end>
+		<ion-buttons *ngIf="currentUserState === 'admin' && mentorAdded === false" slot=end>
       <ion-button (click)="findAMentor()">Find a mentor
+      </ion-button>
+    </ion-buttons>
+		<ion-buttons *ngIf="currentUserState === 'mentee' && mentorAdded === true" slot=end>
+      <ion-button (click)="informMentee()">Connect
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -51,7 +55,7 @@
 					<div *ngIf="msg.senderId === user1.key;then sentMsgs else receivedMsgs"></div>
 					<ng-template #sentMsgs>
 						<ion-row justify-content-end class='messagebox'>
-							<ion-col class="sent"  size=auto>
+							<ion-col class="sent" size=auto>
 							<div class="sentUser">{{user1.name}}</div>
 								{{msg.content}}
 							</ion-col>
