@@ -10,8 +10,12 @@
       <ion-button (click)="findAMentor()">Find a mentor
       </ion-button>
     </ion-buttons>
-		<ion-buttons *ngIf="currentUserState === 'mentee' && mentorAdded === true" slot=end>
+		<ion-buttons *ngIf="currentUserState === 'mentee' && chatType === 'admin' && mentorAdded === true" slot=end>
       <ion-button (click)="informMentee()">Connect
+      </ion-button>
+    </ion-buttons>
+		<ion-buttons *ngIf="currentUserState === 'mentee' && chatType === 'mentor'" slot=end>
+      <ion-button (click)="endSession()">End Session
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

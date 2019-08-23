@@ -1,12 +1,13 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Content, LoadingController, ModalController } from '@ionic/angular';
+import { Content, LoadingController, ModalController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ModalPage } from "../modal/modal.page";
 import { InformmenteePage } from "../informmentee/informmentee.page";
 import * as firebase from 'firebase';
 import { promise } from 'protractor';
+import { FeedbackPage } from '../feedback/feedback.page';
 
 @Component({
   selector: 'app-adminchat',
@@ -59,6 +60,7 @@ export class AdminchatPage implements OnInit {
     public route: ActivatedRoute,
 		private loadingController: LoadingController,
 		public modalController: ModalController,
+		public alertController: AlertController,
 		private location: Location
   ) { 
 			this.chatId = this.router.url.split('/').slice(-1)[0]; 
@@ -125,7 +127,7 @@ export class AdminchatPage implements OnInit {
 		this.scroll();
 	}
 
-
+	
 	
 
   async displayChatMessage() {
@@ -138,17 +140,6 @@ export class AdminchatPage implements OnInit {
 			this.scroll();
     });
   }
-
-  goBack() {
-    this.location.back();
-  }
-
-  private scroll() {
-    setTimeout(() => {  
-			this.content.scrollToBottom(1);
-		}, 100);
-  }
-
 
 	async sendMessage(content: string) {
 		if (this.chatMessage.trim() !== "") {
@@ -164,8 +155,32 @@ export class AdminchatPage implements OnInit {
 		}
 	}	
 
-	findAMentor() {
-		this.openModal()
+  goBack() {
+    this.location.back();
+  }
+
+	async endSession() {
+		const alert = await this.alertController.create({
+			header: "Confirm",
+			message: "Are you sure you want to end this session?",
+			buttons: [
+				{
+					text: "No",
+					handler: () => {
+						console.log("end session yes");
+						alert.dismiss();
+					}
+				}, {
+					text: "Yes",
+					handler: () => {
+						console.log("end session no");
+						this.feedback();
+					}
+				}
+
+			]
+		});
+		alert.present();
 	}
 
 	async checkMentorAdded() {
@@ -183,7 +198,7 @@ export class AdminchatPage implements OnInit {
 		return await modal.present();
 	}
 
-	public async openModal() {
+	public async findAMentor() {
 		const modal = await this.modalController.create({
 	    component: ModalPage,
 	    componentProps: {}
@@ -191,8 +206,13 @@ export class AdminchatPage implements OnInit {
 		return await modal.present();	
 	}
 
-
-
+	public async feedback() {
+		const modal = await this.modalController.create({
+	    component: FeedbackPage,
+	    componentProps: {}
+		});
+		return await modal.present();	
+	}
 
 
 	showLoader() {
@@ -213,6 +233,13 @@ export class AdminchatPage implements OnInit {
       this.loadingController.dismiss();
     }, 4000);
   }
+
+  private scroll() {
+    setTimeout(() => {  
+			this.content.scrollToBottom(1);
+		}, 100);
+  }
+
 
 
 }

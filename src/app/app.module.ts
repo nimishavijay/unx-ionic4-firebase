@@ -12,18 +12,20 @@ import { AppRoutingModule } from './app-routing.module';
 // import { ModalPage } from './pages/modal/modal.page';
 import { ModalPageModule } from './pages/modal/modal.module';
 import { InformmenteePageModule } from './pages/informmentee/informmentee.module';
+import { FeedbackPageModule } from './pages/feedback/feedback.module';
+import { IonicRatingModule } from 'ionic4-rating';
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [
-		// ModalPageModule
-	],
+  entryComponents: [],
   imports: [
 		BrowserModule, 
 		IonicModule.forRoot(), 
 		AppRoutingModule, 
+		IonicRatingModule,
 		ModalPageModule,
-		InformmenteePageModule
+		InformmenteePageModule,
+		FeedbackPageModule
 	],
   providers: [
     StatusBar,

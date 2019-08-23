@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'mentorinfo', loadChildren: './pages/mentorinfo/mentorinfo.module#MentorinfoPageModule' },
   { path: 'mentorcontact', loadChildren: './pages/mentorcontact/mentorcontact.module#MentorcontactPageModule' },
   { path: 'mentorhome', loadChildren: './pages/mentorhome/mentorhome.module#MentorhomePageModule' },
-  { path: 'feedback', loadChildren: './pages/feedback/feedback.module#FeedbackPageModule' },
+  // { path: 'feedback', loadChildren: './pages/feedback/feedback.module#FeedbackPageModule' },
   // { path: 'informmentee', loadChildren: './pages/informmentee/informmentee.module#InformmenteePageModule' },
   // { path: 'modal', loadChildren: './pages/modal/modal.module#ModalPageModule' },
 ];
