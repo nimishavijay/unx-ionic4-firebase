@@ -1,0 +1,10 @@
+TODO:
+*- COMPONENT PROPS IN MODAL: change the structure 
+- honestly just get your shit together tbh
+*- FEEDBACK
+- add mentor approval system for admin
+*- add view mentor details page
+- add stats for admin
+- add profile page
+- add mentor settings page where about etc etc can be changed
+- order chats by last modified

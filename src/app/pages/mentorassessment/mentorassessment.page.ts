@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import * as firebase from 'firebase';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-mentorassessment',
@@ -128,7 +129,8 @@ export class MentorassessmentPage implements OnInit {
 	currentUser: string;
 
   constructor(
-		private router: Router
+		private router: Router,
+		private toastController: ToastController
 	) { }
 
 	ngOnInit() {
@@ -156,7 +158,7 @@ export class MentorassessmentPage implements OnInit {
 	}
 
 	async continue() {
-		firebase.database().ref("mentors/" + this.currentUser + "/assessment").update({
+		firebase.database().ref("mentors/" + this.currentUser + "info/assessment").update({
 			response1: {
 				summary: this.response1.summary,
 				approach: this.response1.approach,
@@ -178,7 +180,18 @@ export class MentorassessmentPage implements OnInit {
 				mentoring: this.response4.mentoring
 			}
 		});
+		firebase.database().ref("mentors/" + this.currentUser).update({
+			status: "pending"
+		})
+		this.presentToast("Your mentor application form has been submitted.");
 		this.router.navigate(['/mentorhome']);
 	}
 
+	private async presentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 1500
+    });
+    toast.present();
+  }
 }

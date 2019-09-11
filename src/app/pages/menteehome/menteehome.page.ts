@@ -13,28 +13,34 @@ import { Key } from 'protractor';
 export class MenteehomePage implements OnInit {
 
   chats = [];
-	currentUser: any;
+	currentUser: any = {
+		key: '',
+		email: ''
+	};
 
   constructor(
 		private router: Router
-	) { }
+	) { 
+		console.log("url: ", this.router.url)
+	}
 
 	async ngOnInit() {
 		console.log('---EXISTING CHATS---');
 	  firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			this.currentUser = firebase.auth().currentUser.uid;
-			firebase.database().ref('mentees/' + this.currentUser + '/chats/').on('value', snapshot => {
-				console.log(snapshot);
-				// if (snapshot) {
-					this.chats = [];
-					snapshot.forEach(chat => {
-						// console.log(chat.val());
-						const temp = chat.val();
-						temp.key = chat.key;
-						this.chats.push(temp);
-					}) 
-				// }
+				this.currentUser.key = firebase.auth().currentUser.uid;
+				this.currentUser.email = firebase.auth().currentUser.email;
+				firebase.database().ref('mentees/' + this.currentUser.key + '/chats/').on('value', snapshot => {
+					console.log(snapshot);
+					// if (snapshot) {
+						this.chats = [];
+						snapshot.forEach(chat => {
+							// console.log(chat.val());
+							const temp = chat.val();
+							temp.key = chat.key;
+							this.chats.push(temp);
+						}) 
+					// }
 				});
 	    } else {
 	      this.router.navigate(['/signin']);

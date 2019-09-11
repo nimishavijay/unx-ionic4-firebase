@@ -125,6 +125,9 @@ export class GetnamePage implements OnInit {
 				}).then(() => console.log("mentorId: ", mentorId))
 			})
 		})
+		firebase.database().ref("mentors/" + mentorId + "/requests").transaction(currentRequests => {
+			return currentRequests + 1;
+		})
 
 		await firebase.database().ref("mentors/" + mentorId + "/name").once("value", snapshot => {
 			mentorName = snapshot.val();

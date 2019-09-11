@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ModalPageModule } from './pages/modal/modal.module';
 import { InformmenteePageModule } from './pages/informmentee/informmentee.module';
 import { FeedbackPageModule } from './pages/feedback/feedback.module';
+import { ViewdetailsPageModule } from './pages/viewdetails/viewdetails.module';
 import { IonicRatingModule } from 'ionic4-rating';
 
 @NgModule({
@@ -25,7 +26,8 @@ import { IonicRatingModule } from 'ionic4-rating';
 		IonicRatingModule,
 		ModalPageModule,
 		InformmenteePageModule,
-		FeedbackPageModule
+		FeedbackPageModule,
+		ViewdetailsPageModule
 	],
   providers: [
     StatusBar,

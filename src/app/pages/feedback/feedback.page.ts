@@ -11,6 +11,7 @@ import * as firebase from "firebase";
 })
 export class FeedbackPage implements OnInit {
 
+	comment: string;
 	chatId: string;
 	currentUser: string;
 	menteeName: string;
@@ -49,5 +50,33 @@ export class FeedbackPage implements OnInit {
 	onModelChange() {
 		console.log(this.rate);
 	}
+
+	submit() {
+		var completed: number;
+		firebase.database().ref("chats/" + this.chatId).update({
+			feedback: {
+				rating: this.rate,
+				comment: this.comment
+			},
+			closed: true
+		})
+
+		firebase.database().ref("mentors/" + this.mentorId + "/closedSessions").transaction(currentCompleted => {
+			completed = currentCompleted;
+			completed++;
+			return (currentCompleted || 0) + 1
+		})
+
+		firebase.database().ref("mentors/" + this.mentorId + "/rating").transaction(currentRating => {
+			return ((currentRating+this.rate)/completed).toFixed(2)
+		}).then(() => { console.log("rating updated") })
+
+		this.router.navigate(['/menteehome']);
+	}
+
+	closeModal() {
+		this.modalController.dismiss();
+	}
+
 
 }

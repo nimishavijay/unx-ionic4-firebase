@@ -11,7 +11,7 @@
 
 <ion-content padding> 
 	<div>
-		<h2>You have been connected to {{mentorName}}</h2>
+		<h2>You are connected to {{mentorName}}</h2>
 		<ion-item>
 			{{mentorRating}}
 			<ion-icon name='star'>
@@ -21,14 +21,3 @@
 	<h3>Background: </h3>
 			{{mentorBg}}
 </ion-content>
-
-<ion-footer>
-	<ion-toolbar>
-		<ion-buttons slot=end>
-			<ion-button color="primary" type="button" (click)="mentorChat()">Mentor</ion-button>
-		</ion-buttons>
-		<ion-buttons slot=start>
-			<ion-button color="primary" type="button" (click)="adminChat()">Admin</ion-button>
-		</ion-buttons>
-	</ion-toolbar>
-</ion-footer>

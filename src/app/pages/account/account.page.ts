@@ -4,6 +4,7 @@ import * as firebase from 'firebase';
 import { AlertController,ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { ok } from 'assert';
 
 
 
@@ -19,6 +20,8 @@ export class AccountPage implements OnInit, OnDestroy {
 		name: '',
 		email:''
 	};
+
+	edit: boolean = false;
 
 	name: string ;
 	email: string;
@@ -52,13 +55,17 @@ export class AccountPage implements OnInit, OnDestroy {
 		this.password = '';
 	}
 
+	editEmail() {
+		this.edit = true;
+	}
+
 	goBack() {
 		this.location.back();
 		// this.router.navigate(['/settings']);
 	}
 
 	async save() {
-		if (this.name !== undefined && this.name !== this.currentUser.name) {
+		/* if (this.name !== undefined && this.name !== this.currentUser.name) {
 			console.log(`updating username from ${this.currentUser.name} to ${this.name}`);
 			await firebase.auth().currentUser.updateProfile({
 				displayName: this.name,
@@ -72,19 +79,28 @@ export class AccountPage implements OnInit, OnDestroy {
 				console.log('successfully updated username')
 				this.presentToast("Successfully updated username");
 			})
-		}
+		} */
 		if (this.email !== undefined && this.email !== this.currentUser.email) {
 			console.log("updating email");
 			var credential = firebase.auth.EmailAuthProvider.credential(this.currentUser.email, this.password)
 			await firebase.auth().currentUser.reauthenticateWithCredential(credential);
-			await firebase.auth().currentUser.updateEmail(this.email).then(async () => {
-				firebase.database().ref("users/").orderByChild("uid").equalTo(this.currentUser.key).on("value", query => {
-					query.forEach(data => {
-						data.ref.child("email").set(this.email);
+			await firebase.auth().currentUser.updateEmail(this.email)
+				.then(async () => {
+					firebase.database().ref("users/").orderByChild("uid").equalTo(this.currentUser.key).on("value", query => {
+						query.forEach(data => {
+							data.ref.child("email").set(this.email);
+						})
 					})
+					this.presentToast("Successfully updated email");
 				})
-				this.presentToast("Successfully updated email");
-			})
+				.catch(async err => {
+					const alert = await this.alertController.create({
+						header: "Error",
+						message: err,
+						buttons: ["OK"]
+					})
+					alert.present();
+				})
 		}
 		this.goBack();
 	}

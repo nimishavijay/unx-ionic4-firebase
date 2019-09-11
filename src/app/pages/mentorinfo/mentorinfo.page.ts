@@ -53,7 +53,7 @@ export class MentorinfoPage implements OnInit {
 		if (this.emotional === true) areas.push("emotional");
 		if (this.self === true) areas.push("self");
 		if (this.isOtherChecked === true) areas.push(this.other);
-		await firebase.database().ref("mentors/" + this.currentUser).update({
+		await firebase.database().ref("mentors/" + this.currentUser + "/info").update({
 			background: this.background,
 			time: this.time,
 			area: areas,

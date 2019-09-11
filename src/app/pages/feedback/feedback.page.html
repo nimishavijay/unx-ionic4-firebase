@@ -11,23 +11,27 @@
 
 <ion-content padding> 
 	<ion-list>
+		<div style="justify-content: center; margin: 5%">
+			<h3>How was your session with {{mentorName}}?</h3>
+		</div>
+		<div style="justify-content: center">
+			<rating [(ngModel)]="rate"
+  		  readonly="false"
+  		  size="default"
+  		  (ngModelChange)="onModelChange()">
+			</rating>
+		</div>
 		<ion-item>
-		<h3>How was your session with {{mentorName}}?</h3>
+			<ion-input [(ngModel)]=comment placeholder="Add a comment"></ion-input>
 		</ion-item>
-		<ion-item style="justify-content: center">
-		<rating [(ngModel)]="rate"
-  	  readonly="false"
-  	  size="default"
-  	  (ngModelChange)="onModelChange()">
-		</rating>
-		</ion-item>
+
 	</ion-list>
 </ion-content>
 
 <ion-footer>
 	<ion-toolbar>
 		<ion-buttons slot=end>
-			<ion-button color="primary" type="button" (click)="submit()">Mentor</ion-button>
+			<ion-button color="primary" type="button" (click)="submit()">Submit</ion-button>
 		</ion-buttons>
 	</ion-toolbar>
 </ion-footer>

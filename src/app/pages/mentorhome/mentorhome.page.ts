@@ -12,7 +12,8 @@ export class MentorhomePage implements OnInit {
   chats = [];
 	currentUser: any = {
 		key: null,
-		name: null
+		name: null,
+		status: null
 	};
 
   constructor(
@@ -25,8 +26,9 @@ export class MentorhomePage implements OnInit {
 	    if (user) {
 				this.currentUser.key = firebase.auth().currentUser.uid;
 				console.log("key: ", this.currentUser.key );
-				firebase.database().ref('mentors/' + this.currentUser.key + "/name").once('value', snapshot => {
-				this.currentUser.name =  snapshot.val();
+				firebase.database().ref('mentors/' + this.currentUser.key).once('value', snapshot => {
+				this.currentUser.name =  snapshot.child("name").val();
+				this.currentUser.status = snapshot.child("status").val();
 			});
 			firebase.database().ref('mentors/' + this.currentUser.key + "/chats").on('value', snapshot => {
 				this.chats = [];

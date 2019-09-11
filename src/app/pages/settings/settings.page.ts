@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ToastController, Platform } from '@ionic/angular';
 import * as firebase from 'firebase';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
@@ -16,50 +16,72 @@ import { Router } from '@angular/router';
 export class SettingsPage implements OnInit {
 
 	type: string
-	currentUser = {
-		key: '',
-		name: ''
-	};
+	currentUser: string;
+	currentEmail: string;
 
   constructor(
 		private router: Router,
 		private location: Location,
-		public toastController: ToastController
-	) {	 }
-
-  ngOnInit() {
-		console.log("---SETTINGS---");
-		firebase.auth().onAuthStateChanged(async (user) => {
+		public toastController: ToastController,
+		private platform: Platform
+	) {	
+			firebase.auth().onAuthStateChanged(async (user) => {
 	    if (user) {
-			await firebase.database().ref('users/' + firebase.auth().currentUser.uid).once('value', snapshot => {
-				snapshot.forEach((data) => {
-					// this.currentUser.name = data.val().username;
-					this.currentUser.key =  data.key;
-					this.type = data.val().currentState;
-					console.log("Current user: ", this.currentUser.key);
-					})
+				this.currentUser = firebase.auth().currentUser.uid;
+				this.currentEmail = firebase.auth().currentUser.email;
+				firebase.database().ref("users/" + this.currentUser + "/currentState").on("value", snapshot => {
+					this.type = snapshot.val();
 				})
 				console.log("type: ", this.type);
   		} else {
 				this.router.navigate(['/signin']);
 			}
 		})
+	 }
+
+  ngOnInit() {
+		console.log("---SETTINGS---");
+	/* 	firebase.auth().onAuthStateChanged(async (user) => {
+	    if (user) {
+				this.currentUser = firebase.auth().currentUser.uid;
+				this.currentEmail = firebase.auth().currentUser.email;
+				firebase.database().ref("users/" + this.currentUser + "/currentState").on("value", snapshot => {
+					this.type = snapshot.val();
+				})
+				console.log("type: ", this.type);
+  		} else {
+				this.router.navigate(['/signin']);
+			}
+		}) */
 	}
 
 	setType(type: string) {
-		firebase.database().ref('users/' + this.currentUser.key + '/' +  type).set(true);
-		firebase.database().ref('users/' + this.currentUser.key + '/currentState').set(type)
+		firebase.database().ref('users/' + this.currentUser + '/' +  type).set(true);
+		firebase.database().ref('users/' + this.currentUser + '/currentState').set(type)
 		.then(() => {
 			console.log("set current user type to: ", type);
 		})
 	}
+/* 
+	backButtonEvent() {
+		this.platform.backButton.subscribe(async () => {
+			this.location.back();
+		})
+	} */
 
 	goBack() {
 		this.presentToast("Your changes have been saved");
-		this.location.back();
-		// this.router.navigate(['/menteehome']);
+
+		// this.platform.backButton.subscribe(async () => {
+			this.location.back();
+		// })
 	}
 	
+	viewProfile() {
+		console.log('navigate to /profile');
+		// this.router.navigate(['/profile']);
+	}
+
 	goToMentorSettings() {
 		console.log('navigate to /mentor');
 		// this.router.navigate(['/mentor']);

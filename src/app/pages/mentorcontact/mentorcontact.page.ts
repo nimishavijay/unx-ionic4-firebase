@@ -37,7 +37,7 @@ export class MentorcontactPage implements OnInit {
   }
 
 	async continue() {
-		await firebase.database().ref("mentors/" + this.currentUser).set({
+		await firebase.database().ref("mentors/" + this.currentUser + "/info").set({
 			name: this.name,
 			phone: this.phone,
 			socialmedia: this.socialmedia,

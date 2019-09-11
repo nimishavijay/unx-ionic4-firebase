@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ModalPage } from "../modal/modal.page";
 import { InformmenteePage } from "../informmentee/informmentee.page";
+import { ViewdetailsPage } from '../viewdetails/viewdetails.page';
 import * as firebase from 'firebase';
 import { promise } from 'protractor';
 import { FeedbackPage } from '../feedback/feedback.page';
@@ -185,7 +186,13 @@ export class AdminchatPage implements OnInit {
 
 	async checkMentorAdded() {
 		firebase.database().ref("chats/" + this.chatId + "/type").on("value", snapshot => {
-			if (snapshot.val() === "mentor") this.mentorAdded = true;
+			if (snapshot.val() === "mentor") {
+				this.mentorAdded = true;
+				snapshot.ref.parent.once("value", mentorSnap => {
+					this.mentor.key = mentorSnap.child("mentorId").val();
+					this.mentor.name = mentorSnap.child("mentorName").val();
+				})
+			}
 			else this.mentorAdded = false;
 		})
 	}
@@ -193,7 +200,9 @@ export class AdminchatPage implements OnInit {
 	public async informMentee() {
 		const modal = await this.modalController.create({
 			component: InformmenteePage,
-			componentProps: {}
+			componentProps: {
+				mentor: this.mentor.key
+			}
 		})
 		return await modal.present();
 	}
@@ -209,6 +218,14 @@ export class AdminchatPage implements OnInit {
 	public async feedback() {
 		const modal = await this.modalController.create({
 	    component: FeedbackPage,
+	    componentProps: {}
+		});
+		return await modal.present();	
+	}
+
+	public async viewDetails() {
+		const modal = await this.modalController.create({
+	    component: ViewdetailsPage,
 	    componentProps: {}
 		});
 		return await modal.present();	

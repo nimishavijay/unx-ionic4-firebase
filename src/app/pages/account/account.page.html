@@ -19,15 +19,10 @@
 
 	<ion-list>
 	  <ion-item>
-	  	<ion-label position='stacked'>Name</ion-label>
-	   	<ion-input type='text' value={{currentUser.name}} [(ngModel)]='name' name='name'></ion-input>
-	  </ion-item>
-	</ion-list>
-
-	<ion-list>
-	  <ion-item>
 	  	<ion-label position='stacked'>Email</ion-label>
-	  	<ion-input type='text' value={{currentUser.email}} [(ngModel)]='email' name='email'></ion-input>
+				<ion-icon *ngIf="!edit" name=create size=small slot=end (click)="editEmail()"></ion-icon>
+	  	<ion-input type='text' value={{currentUser.email}} [(ngModel)]='email' name='email' [readonly]="!edit">
+			</ion-input>
 	  </ion-item>
 
 		<ion-item>
@@ -50,22 +45,5 @@
 			</ion-item>
 		
 	</ion-list>
-
-
-<!-- 	<ion-list>
-	  <ion-item>
-	  	<ion-label position='stacked'>Password</ion-label>
-	  	<ion-input type='password' placeholder='Current password' [(ngModel)]='oldpassword' name='oldpassword'></ion-input>
-	  </ion-item>
-		
-		<ion-item>
-	    <ion-input type='password' placeholder='New password' [(ngModel)]='newpassword'></ion-input>
-	  </ion-item>
-		
-		<ion-item>
-	    <ion-input type='password' placeholder='Confirm password'  [(ngModel)]='confirm'></ion-input>
-			<ion-icon name='checkmark' size='small' colour='primary' slot='end' (click)='updatePassword()'></ion-icon>
-	  </ion-item>
-	</ion-list> -->
 
 </ion-content>

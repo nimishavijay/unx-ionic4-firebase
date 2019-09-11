@@ -12,6 +12,20 @@
 
 <ion-content padding>
 	<ion-list>
+		<ion-item>
+			<ion-fab horizontal=end vertical=top (click)="console.log('clicked')">
+				<ion-icon name=create></ion-icon>
+			</ion-fab>
+			<ion-list>
+				<ion-text>
+					<h2>{{currentEmail}}</h2>
+				</ion-text>
+				<ion-text>
+					<h4>{{type.charAt(0).toUpperCase() + type.substr(1).toLowerCase()}}</h4>
+				</ion-text>
+			</ion-list>
+		</ion-item>
+		
 		<ion-list>
 		  <ion-radio-group [(ngModel)]='type' name='type' (ionChange)='setType(type)'>
 		 
