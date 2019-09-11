@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>SignIn</ion-title>
+    <ion-title>Sign In</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding class='center-content'>
-	<ion-grid style='height: 100%;'>
-	<ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column">
-		<ion-col align-self-center>
+	<!-- <ion-grid style='height: 100%;'> -->
+	<!-- <ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column"> -->
+		<!-- <ion-col align-self-center> -->
     <ion-list>
       <ion-item>
         <ion-label position="floating">E-mail</ion-label>
@@ -23,14 +23,18 @@
 		<ion-list>
 			<!-- <ion-row align-items-center justify-content-center> -->
 				<ion-row justify-content-center>
-					<ion-button color="primary" type="button" (click)="signIn()">Sign In</ion-button>
+					<ion-button color="primary" type="button" (click)="signIn()">Sign In
+						<div *ngIf="isLoading === true" class=loader>
+									<ion-spinner class="spinner" name=crescent></ion-spinner>
+						</div>
+					</ion-button>
 				</ion-row>
 				<ion-row justify-content-center>
 					<ion-button fill="clear" color="primary" type="button" (click)="signUp()">Sign Up</ion-button>
 				</ion-row>
 			<!-- </ion-row> -->
 		</ion-list>
-		</ion-col>
-	</ion-row>
-	</ion-grid>
+		<!-- </ion-col> -->
+	<!-- </ion-row> -->
+	<!-- </ion-grid> -->
 </ion-content>

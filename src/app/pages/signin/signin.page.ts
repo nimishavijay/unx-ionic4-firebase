@@ -11,6 +11,8 @@ import * as firebase from 'firebase';
 })
 export class SigninPage implements OnInit, OnDestroy {
 
+	isLoading: boolean = false;
+
   data = { 
 		email: '', 
 		password: '' 
@@ -21,7 +23,8 @@ export class SigninPage implements OnInit, OnDestroy {
     public alertController: AlertController
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+		await firebase.auth().signOut();
 		this.data.email = '';
 		this.data.password = '';
   }
@@ -32,6 +35,7 @@ export class SigninPage implements OnInit, OnDestroy {
 	}
 
   async signIn() {
+		this.isLoading = true;
     try {
       await firebase.auth().signInWithEmailAndPassword(this.data.email, this.data.password).then(() => console.log("signed in"));
 				firebase.auth().onAuthStateChanged(async user => {
@@ -55,6 +59,7 @@ export class SigninPage implements OnInit, OnDestroy {
 			// activeUser.key = firebase.auth().currentUser.uid;
 				
     } catch (error) {
+			this.isLoading = false;
       const alert = await this.alertController.create({
         header: 'Error',
         message: error.message,
